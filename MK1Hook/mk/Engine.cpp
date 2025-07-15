@@ -151,6 +151,45 @@ char* GetCharacterSkinName(PLAYER_NUM plr)
 	return skin;
 }
 
+char* GetCharacterOverrideName(PLAYER_NUM plr, bool isPal)
+{
+	CharacterDefinitionV2* chr = GetCharacterDefinition(plr);
+
+	if (!chr)
+		return nullptr;
+
+	TArray<Override>* overrides = nullptr;
+
+	if (IsCharacterPartner(plr)) {
+		KameoCharacter* kam = reinterpret_cast<KameoCharacter*>(chr);
+		overrides = &kam->overrides;
+	}
+	else
+	{
+		MainCharacter* mainChr = reinterpret_cast<MainCharacter*>(chr);
+		overrides = &mainChr->overrides;
+	}
+
+	if (!overrides)
+		return nullptr;
+
+	if (overrides->Count == 0)
+	{
+		return "N\\A";
+	}
+
+	int index = isPal ? 0 : 1;
+
+	Override override = overrides->Get(index);
+	FString fstring;
+	override.path.ToString(&fstring);
+
+	static char overrideName[256];
+	snprintf(overrideName, sizeof(overrideName), "%ws", fstring.GetStr());
+
+	return overrideName;
+}
+
 void SetTeamMode(TEAM_NUM plr, TEAM_INFO_MODE mode)
 {
 	FightingTeamDefinition* team = GetGameInfo()->GetTeam(plr);
@@ -209,9 +248,65 @@ void SetCharacterSkin(PLAYER_NUM plr, char* name)
 	chr->skin.Index = skinName.Index;
 }
 
-void SetCharacterExtraMoveset(PLAYER_NUM plr, char* name)
+void SetCharacterOverride(PLAYER_NUM plr, char* name, bool isPal)
 {
 	CharacterDefinitionV2* chr = GetCharacterDefinition(plr);
+
+	if (!chr)
+		return;
+
+	TArray<Override>* overrides = nullptr;
+
+	if (IsCharacterPartner(plr)) {
+		KameoCharacter* kam = reinterpret_cast<KameoCharacter*>(chr);
+		overrides = &kam->overrides;
+	}
+	else
+	{
+		MainCharacter* mainChr = reinterpret_cast<MainCharacter*>(chr);
+		overrides = &mainChr->overrides;
+	}
+
+	if (!overrides)
+		return;
+
+	FName palName(name, FNAME_Add, 1);
+	int index = isPal ? 0 : 1;
+	
+	//Check if array is empty and resize if necessary
+	if (overrides->Count == 0)
+	{
+		int count = overrides->Count;
+		count++;
+
+		static uintptr_t pat = _pattern(PATID_TArray_Resize);
+		if (pat)
+			((void(__fastcall*)(int64, int, int))pat)((int64)&overrides->Data, count, sizeof(Override));
+
+		Override override;
+		override.path.Index = palName.Index;
+
+		FName none("None", FNAME_Add, 1);
+		Override noneOverride;
+		noneOverride.path.Index = none.Index;
+
+		//Add empty index 0 if it's gear
+		if (!isPal)
+			overrides->Add(noneOverride);
+
+		overrides->Add(override);
+
+		//Add empty index 1 if it's palette (but not for kameos)
+		if (isPal && !IsCharacterPartner(plr))
+			overrides->Add(noneOverride);
+	}
+
+	overrides->Get(index).path.Index = palName.Index;
+}
+
+void SetCharacterExtraMoveset(PLAYER_NUM plr, char* name)
+{
+	MainCharacter* chr = reinterpret_cast<MainCharacter*>(GetCharacterDefinition(plr));
 
 	if (!chr)
 		return;

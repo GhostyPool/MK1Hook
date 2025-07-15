@@ -862,6 +862,34 @@ void MK12Menu::DrawCharacterTab()
 		ImGui::PushItemWidth(-FLT_MIN);
 		ImGui::InputText("##p2skin", szPlayer2Skin, sizeof(szPlayer2Skin));
 		ImGui::PopItemWidth();
+
+		if (ImGui::CollapsingHeader("Change Palette"))
+		{
+			ImGui::TextWrapped("Use UModel/FModel to find the full path of the palette, eg. \"/Game/Disk/Char/SubZero/Skin/001/Palette/SetA/Blueprints/BP_SubZero_Skin001_Pal002.BP_SubZero_Skin001_Pal002_C\"");
+			ImGui::Checkbox("Change Player 1 Palette", &m_bPlayer1PalModifier);
+			ImGui::PushItemWidth(-FLT_MIN);
+			ImGui::InputText("##p1pal", szPlayer1Pal, sizeof(szPlayer1Pal));
+			ImGui::PopItemWidth();
+
+			ImGui::Checkbox("Change Player 2 Palette", &m_bPlayer2PalModifier);
+			ImGui::PushItemWidth(-FLT_MIN);
+			ImGui::InputText("##p2pal", szPlayer2Pal, sizeof(szPlayer2Pal));
+			ImGui::PopItemWidth();
+		}
+
+		if (ImGui::CollapsingHeader("Change Gear"))
+		{
+			ImGui::TextWrapped("Use UModel/FModel to find the full path of the gear, eg. \"/Game/Disk/Char/SubZero/Gear/002/Blueprint/BP_SubZero_Gear002_A.BP_SubZero_Gear002_A_C\"");
+			ImGui::Checkbox("Change Player 1 Gear", &m_bPlayer1GearModifier);
+			ImGui::PushItemWidth(-FLT_MIN);
+			ImGui::InputText("##p1gear", szPlayer1Gear, sizeof(szPlayer1Gear));
+			ImGui::PopItemWidth();
+
+			ImGui::Checkbox("Change Player 2 Gear", &m_bPlayer2GearModifier);
+			ImGui::PushItemWidth(-FLT_MIN);
+			ImGui::InputText("##p2gear", szPlayer2Gear, sizeof(szPlayer2Gear));
+			ImGui::PopItemWidth();
+		}
 	}
 	if (ImGui::CollapsingHeader("Change Addon Moveset"))
 	{
@@ -979,6 +1007,20 @@ void MK12Menu::DrawKameoTab()
 		ImGui::PushItemWidth(-FLT_MIN);
 		ImGui::InputText("##p2kskin", szPlayer2KameoSkin, sizeof(szPlayer2KameoSkin));
 		ImGui::PopItemWidth();
+
+		if (ImGui::CollapsingHeader("Change Kameo Palette"))
+		{
+			ImGui::TextWrapped("Use UModel/FModel to find the full path of the palette, eg. \"/Game/Disk/Char/SubZero/Skin/001/Palette/SetA/Blueprints/BP_SubZero_Skin001_Pal002.BP_SubZero_Skin001_Pal002_C\"");
+			ImGui::Checkbox("Change Player 1 Kameo Palette", &m_bPlayer1KameoPalModifier);
+			ImGui::PushItemWidth(-FLT_MIN);
+			ImGui::InputText("##p1kpal", szPlayer1KameoPal, sizeof(szPlayer1KameoPal));
+			ImGui::PopItemWidth();
+
+			ImGui::Checkbox("Change Player 2 Kameo Palette", &m_bPlayer2KameoPalModifier);
+			ImGui::PushItemWidth(-FLT_MIN);
+			ImGui::InputText("##p2kpal", szPlayer2KameoPal, sizeof(szPlayer2KameoPal));
+			ImGui::PopItemWidth();
+		}
 	}
 
 }

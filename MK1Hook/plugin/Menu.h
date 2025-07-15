@@ -139,6 +139,10 @@ public:
 	bool	m_bPlayer2Modifier = false;
 	bool	m_bPlayer1SkinModifier = false;
 	bool	m_bPlayer2SkinModifier = false;
+	bool	m_bPlayer1PalModifier = false;
+	bool	m_bPlayer2PalModifier = false;
+	bool	m_bPlayer1GearModifier = false;
+	bool	m_bPlayer2GearModifier = false;
 	bool	m_bPlayer1MovesetModifier = false;
 	bool	m_bPlayer2MovesetModifier = false;
 
@@ -146,6 +150,8 @@ public:
 	bool	m_bPlayer2KameoModifier = false;
 	bool	m_bPlayer1KameoSkinModifier = false;
 	bool	m_bPlayer2KameoSkinModifier = false;
+	bool	m_bPlayer1KameoPalModifier = false;
+	bool	m_bPlayer2KameoPalModifier = false;
 
 	bool    m_bChangeGameMode = false;
 	bool	m_bOldTagSwap = false;
@@ -200,6 +206,10 @@ public:
 	char szPlayer2ModifierCharacter[1024] = {};
 	char szPlayer1Skin[1024] = {};
 	char szPlayer2Skin[1024] = {};
+	char szPlayer1Pal[1024] = {};
+	char szPlayer2Pal[1024] = {};
+	char szPlayer1Gear[1024] = {};
+	char szPlayer2Gear[1024] = {};
 	char szPlayer1Moveset[1024] = {};
 	char szPlayer2Moveset[1024] = {};
 
@@ -208,6 +218,8 @@ public:
 
 	char szPlayer1KameoSkin[1024] = {};
 	char szPlayer2KameoSkin[1024] = {};
+	char szPlayer1KameoPal[1024] = {};
+	char szPlayer2KameoPal[1024] = {};
 	char szPlayer1TagCharacter[1024] = {};
 	char szPlayer2TagCharacter[1024] = {};
 	char szCurrentCameraOption[128] = {};

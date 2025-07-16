@@ -180,11 +180,14 @@ char* GetCharacterOverrideName(PLAYER_NUM plr, bool isPal)
 
 	int index = isPal ? 0 : 1;
 
+	if ((index + 1) > overrides->Count)
+		return "N\\A";
+
 	Override override = overrides->Get(index);
 	FString fstring;
 	override.path.ToString(&fstring);
 
-	static char overrideName[256];
+	static char overrideName[512] = {};
 	snprintf(overrideName, sizeof(overrideName), "%ws", fstring.GetStr());
 
 	return overrideName;

@@ -160,6 +160,9 @@ char* GetCharacterOverrideName(PLAYER_NUM plr, bool isPal)
 
 	TArray<Override>* overrides = nullptr;
 
+	if (strcmp(GetCharacterSkinName(plr), "None") == 0)
+		return nullptr;
+
 	if (IsCharacterPartner(plr)) {
 		KameoCharacter* kam = reinterpret_cast<KameoCharacter*>(chr);
 		overrides = &kam->overrides;

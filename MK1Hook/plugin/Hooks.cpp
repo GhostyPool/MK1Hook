@@ -209,7 +209,7 @@ void PluginFightStartup(int64 ptr)
 		eLog::Message("MK1Hook::Info()", "P4: %s Palette: %s", GetCharacterName(PLAYER4), GetCharacterOverrideName(PLAYER4, true));
 	}
 
-	PluginInterface::OnFightStartup();
+	PluginInterface::OnFightStartup((void*)ptr);
 }
 
 void PluginFightStartupSkipDialogue(int64 ptr)

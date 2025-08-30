@@ -59,11 +59,14 @@ void PluginInterface::OnFrameTick()
 	}
 }
 
-void PluginInterface::OnFightStartup()
+void PluginInterface::OnFightStartup(void* ptr)
 {
 	for (unsigned int i = 0; i < plugins.size(); i++)
 	{
 		plugins[i].pluginOnFightStartup();
+
+		if (plugins[i].pluginOnFightStartup_withPtr)
+			plugins[i].pluginOnFightStartup_withPtr(ptr);
 	}
 }
 
@@ -155,6 +158,7 @@ bool PluginInfo::Load(wchar_t* path)
 			eLog::Message(__FUNCTION__, "ERROR: Could not find OnFightStartup for %ws!", path);
 			return false;
 		}
+		pluginOnFightStartup_withPtr = (void(*)(void*))GetProcAddress(hModule, "OnFightStartup_withPtr");
 		pluginOnInitialize = (void(*)())GetProcAddress(hModule, "OnInitialize");
 		if (!pluginOnInitialize)
 		{

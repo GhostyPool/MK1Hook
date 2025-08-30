@@ -19,6 +19,7 @@ public:
 	void (*pluginOnFrameTick)(void) = nullptr;
 	void (*pluginOnInitialize)() = nullptr;
 	void (*pluginOnFightStartup)(void) = nullptr;
+	void (*pluginOnFightStartup_withPtr)(void*) = nullptr;
 	void (*pluginOnShutdown)(void) = nullptr;
 	void (*pluginTabFunction)(void) = nullptr;
 
@@ -42,7 +43,7 @@ public:
 	static void UnloadPlugins();
 
 	static void OnFrameTick();
-	static void OnFightStartup();
+	static void OnFightStartup(void* ptr);
 
 	static void ProcessPluginTabs();
 

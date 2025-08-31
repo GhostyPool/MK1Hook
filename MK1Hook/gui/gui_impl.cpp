@@ -233,6 +233,8 @@ void GUIImplementation::ImGui_SetStyle()
 	style->FramePadding = ImVec2(6, 4.25);
 	ImVec4* colors = style->Colors;
 
+	style->Alpha = 254.0f / 255.0f;
+
 	for (int i = 0; i < ImGuiCol_COUNT; i++)
 	{
 		ImVec4 col = style->Colors[i];

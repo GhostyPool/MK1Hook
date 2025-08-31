@@ -155,15 +155,13 @@ char* GetCharacterOverrideName(PLAYER_NUM plr, bool isPal)
 {
 	CharacterDefinitionV2* chr = GetCharacterDefinition(plr);
 
-	if (!chr)
+	char* charName = GetCharacterName(plr);
+	if (!chr || strcmp(charName, "CHAR_None") == 0)
 		return nullptr;
 
 	TArray<Override>* overrides = nullptr;
-
-	if (strcmp(GetCharacterSkinName(plr), "None") == 0)
-		return nullptr;
-
-	if (IsCharacterPartner(plr)) {
+	if (IsCharacterPartner(plr) && strstr(charName, "KHAR_"))
+	{
 		KameoCharacter* kam = reinterpret_cast<KameoCharacter*>(chr);
 		overrides = &kam->overrides;
 	}
@@ -177,16 +175,14 @@ char* GetCharacterOverrideName(PLAYER_NUM plr, bool isPal)
 		return nullptr;
 
 	if (overrides->Count == 0)
-	{
 		return "N\\A";
-	}
 
 	int index = isPal ? 0 : 1;
 
 	if ((index + 1) > overrides->Count)
 		return "N\\A";
 
-	Override override = overrides->Get(index);
+	Override& override = overrides->Get(index);
 	FString fstring;
 	override.path.ToString(&fstring);
 
@@ -258,12 +254,14 @@ void SetCharacterOverride(PLAYER_NUM plr, char* name, bool isPal)
 {
 	CharacterDefinitionV2* chr = GetCharacterDefinition(plr);
 
-	if (!chr)
+	char* charName = GetCharacterName(plr);
+	if (!chr || strcmp(charName, "CHAR_None") == 0)
 		return;
 
 	TArray<Override>* overrides = nullptr;
 
-	if (IsCharacterPartner(plr)) {
+	if (IsCharacterPartner(plr) && strstr(charName, "KHAR_"))
+	{
 		KameoCharacter* kam = reinterpret_cast<KameoCharacter*>(chr);
 		overrides = &kam->overrides;
 	}
@@ -303,7 +301,7 @@ void SetCharacterOverride(PLAYER_NUM plr, char* name, bool isPal)
 		overrides->Add(override);
 
 		//Add empty index 1 if it's palette (but not for kameos)
-		if (isPal && !IsCharacterPartner(plr))
+		if (isPal && !(IsCharacterPartner(plr) && strstr(charName, "KHAR_")))
 			overrides->Add(noneOverride);
 	}
 

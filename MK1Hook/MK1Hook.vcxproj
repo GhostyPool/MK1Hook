@@ -135,6 +135,7 @@
     <ClInclude Include="mk\MKModifier.h" />
     <ClInclude Include="mk\MKObject.h" />
     <ClInclude Include="mk\MKScript.h" />
+    <ClInclude Include="mk\Palette.h" />
     <ClInclude Include="mk\PlayerInfo.h" />
     <ClInclude Include="mk\Scaleform.h" />
     <ClInclude Include="mk\VMProc.h" />
@@ -404,10 +405,12 @@
     <ClInclude Include="unreal\FRotator.h" />
     <ClInclude Include="unreal\FString.h" />
     <ClInclude Include="unreal\FVector.h" />
+    <ClInclude Include="unreal\FWeakObjectPtr.h" />
     <ClInclude Include="unreal\SkeletalMesh.h" />
     <ClInclude Include="unreal\TArray.h" />
     <ClInclude Include="unreal\ULevel.h" />
     <ClInclude Include="unreal\UObject.h" />
+    <ClInclude Include="unreal\UTexture2D.h" />
     <ClInclude Include="unreal\UWorld.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="utils\addr.h" />
@@ -451,6 +454,7 @@
     <ClCompile Include="mk\MKModifier.cpp" />
     <ClCompile Include="mk\MKObject.cpp" />
     <ClCompile Include="mk\MKScript.cpp" />
+    <ClCompile Include="mk\Palette.cpp" />
     <ClCompile Include="mk\PlayerInfo.cpp" />
     <ClCompile Include="mk\Scaleform.cpp" />
     <ClCompile Include="mk\VMProc.cpp" />

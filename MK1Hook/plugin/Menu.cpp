@@ -677,6 +677,11 @@ void MK12Menu::Draw()
 			DrawModifiersTab();
 			ImGui::EndTabItem();
 		}
+		if (ImGui::BeginTabItem("Palette Editor"))
+		{
+			DrawPaletteEditorTab();
+			ImGui::EndTabItem();
+		}
 		if (ImGui::BeginTabItem("Player"))
 		{
 			DrawPlayerTab();
@@ -2270,6 +2275,49 @@ void MK12Menu::DrawModifiersTab()
 		}
 		ImGui::EndTabBar();
 	}
+}
+
+void MK12Menu::DrawPaletteEditorTab()
+{
+	std::erase_if(m_Palettes, [](PaletteData* data) {
+		if (!data->weakTex.IsValid()) {
+			data->inMenu = false;
+			return true;
+		}
+		return false;
+		});
+
+	if (!m_Palettes.empty())
+	{
+		for (PaletteData* data : m_Palettes)
+		{
+			if (ImGui::CollapsingHeader(data->texName.c_str()))
+			{
+				ImGui::PushID(data);
+
+				for (int i = 0; i < 16; i++)
+				{
+					ImGui::PushID(i);
+
+					static char label[32] = {};
+					snprintf(label, sizeof(label), "Colour %d", i + 1);
+					ImGui::ColorEdit4(label, &data->colours[i].x);
+
+					ImGui::PopID();
+				}
+
+				if (ImGui::Button("Apply", ImVec2(ImGui::CalcItemWidth(), 0)))
+				{
+					data->changedColour = true;
+					ApplyPaletteColour(data);
+				}
+
+				ImGui::PopID();
+			}
+		}
+	}
+	else
+		ImGui::Text("No palettes currently loaded!");
 }
 
 void MK12Menu::RunLastScript(eScriptKeyBind_CallType callType)

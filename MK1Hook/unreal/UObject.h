@@ -13,6 +13,9 @@ public:
 	UClass*		Class;
 	FName		Name;
 	UObject*	Outer;
+
+	FName GetFName() const;
+	FString GetName() const;
 };
 
 

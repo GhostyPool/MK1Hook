@@ -17,6 +17,7 @@
 #include "utils/Patterns.h"
 #include "minhook/include/MinHook.h"
 #include "mk/Engine.h"
+#include "mk/Palette.h"
 #include "helper/eGamepadManager.h"
 
 #include "unreal/FEngineLoop.h"
@@ -53,6 +54,10 @@ void OnInitializeHook()
 	Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
 	InjectHook(_pattern(PATID_FEngineLoop_Tick_Hook), tramp->Jump(&FEngineLoop::Tick));
 	InjectHook(_pattern(PATID_MKCamera_FillCameraCache_Hook), tramp->Jump(&MKCamera::HookedFillCameraCache));
+
+	//Palettes
+	ReadCall(_pattern(PATID_SetPaletteTexture), orgSetTextureParameterValue);
+	InjectHook(_pattern(PATID_SetPaletteTexture), tramp->Jump(SetPaletteTexture_Hook));
 
 	ReadCall(_pattern(PATID_MKScript_RegisterSpecialMove), orgRegisterSpecialMove);
 	InjectHook(_pattern(PATID_MKScript_RegisterSpecialMove), tramp->Jump(RegisterSpecialMove_Hook));

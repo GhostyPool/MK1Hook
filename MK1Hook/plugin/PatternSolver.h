@@ -5,6 +5,18 @@ enum EPatternID {
 	PATID_FEngineLoop_Tick,
 	PATID_FEngineLoop_Tick_Hook,
 
+	PATID_SetPaletteTexture,
+
+	PATID_BulkData_Lock,
+	PATID_BulkData_Unlock,
+	PATID_BulkData_Realloc,
+
+	PATID_FWeakObjectPtr_Get,
+	PATID_FWeakObjectPtr_Equal,
+	PATID_FWeakObjectPtr_IsValid,
+
+	PATID_UTexture2D_UpdateResource,
+
 	PATID_MKCamera_FillCameraCache,
 	PATID_MKCamera_FillCameraCache_Hook,
 

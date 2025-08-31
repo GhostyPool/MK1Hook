@@ -197,6 +197,8 @@ void PluginFightStartup(int64 ptr)
 	{
 		eLog::Message("MK1Hook::Info()", "P3: %s Skin: %s", GetCharacterName(PLAYER3), GetCharacterSkinName(PLAYER3));
 		eLog::Message("MK1Hook::Info()", "P3: %s Palette: %s", GetCharacterName(PLAYER3), GetCharacterOverrideName(PLAYER3, true));
+		if (!strstr(GetCharacterName(PLAYER3), "KHAR_"))
+			eLog::Message("MK1Hook::Info()", "P3: %s Gear: %s", GetCharacterName(PLAYER3), GetCharacterOverrideName(PLAYER3, false));
 	}
 
 	eLog::Message("MK1Hook::Info()", "Team2");
@@ -207,6 +209,8 @@ void PluginFightStartup(int64 ptr)
 	{
 		eLog::Message("MK1Hook::Info()", "P4: %s Skin: %s", GetCharacterName(PLAYER4), GetCharacterSkinName(PLAYER4));
 		eLog::Message("MK1Hook::Info()", "P4: %s Palette: %s", GetCharacterName(PLAYER4), GetCharacterOverrideName(PLAYER4, true));
+		if (!strstr(GetCharacterName(PLAYER4), "KHAR_"))
+			eLog::Message("MK1Hook::Info()", "P4: %s Gear: %s", GetCharacterName(PLAYER4), GetCharacterOverrideName(PLAYER4, false));
 	}
 
 	PluginInterface::OnFightStartup();

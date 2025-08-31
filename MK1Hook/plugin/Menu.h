@@ -3,6 +3,7 @@
 #include "../mk/CharacterDefinition.h"
 #include "../mk/MKCharacter.h"
 #include "../mk/MKCamera.h"
+#include "../mk/Palette.h"
 #include "PluginInterface.h"
 
 #include "../helper/eKeyboardMan.h"
@@ -247,6 +248,9 @@ public:
 	std::vector<ScriptDataFunction> m_SpecialMoveList;
 	std::vector<ScriptDataFunction> m_DataFunctionsList;
 
+	//Palettes
+	std::vector<PaletteData*> m_Palettes;
+
 	// camera
 
 	FVector  camPos = {};
@@ -282,6 +286,7 @@ public:
 	void	 DrawStageTab();
 	void	 DrawKameoTab();
 	void	 DrawModifiersTab();
+	void	 DrawPaletteEditorTab();
 	void	 DrawPlayerTab();
 	void	 DrawSpeedTab();
 	void	 DrawCameraTab();

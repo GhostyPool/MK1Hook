@@ -29,6 +29,18 @@ void PatternSolver::Initialize()
     ms_patterns[PATID_FEngineLoop_Tick] = GetPattern("48 8B C4 48 89 58 10 48 89 70 18 48 89 78 20 55 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 C8", 0);
     ms_patterns[PATID_FEngineLoop_Tick_Hook] = GetPattern("48 8D 0D ? ? ? ? E8 ? ? ? ? 80 3D ? ? ? ? ? 74 EB 80", 7);
 
+    ms_patterns[PATID_SetPaletteTexture] = GetPattern("E8 ? ? ? ? 48 8B 4C 24 ? 48 8B 7C 24 ? 48 8B 74 24 ? 48 8B 6C 24 ? 48 8B 9C 24", 0);
+
+    ms_patterns[PATID_BulkData_Lock] = GetPattern("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 8B 41 ? 8B FA", 0);
+    ms_patterns[PATID_BulkData_Unlock] = GetPattern("8B 41 ? 48 8B D1 C1 E8 ? C6 41", 0);
+    ms_patterns[PATID_BulkData_Realloc] = GetPattern("48 89 5C 24 ? 57 48 83 EC ? 48 8B F9 45 33 C0 48 8B 49 ? 48 8B DA", 0);
+
+    ms_patterns[PATID_FWeakObjectPtr_Get] = GetPattern("44 8B 41 ? 45 85 C0 74 ? ? ? 85 C9 78 ? 3B 0D ? ? ? ? 7D ? 8B C1 99 0F B7 D2 03 C2 C1 F8 ? 4C 63 C8 81 E1 ? ? ? ? 7D ? FF C9 81 C9 ? ? ? ? FF C1 48 63 C1 ? ? ? ? 48 8B 05 ? ? ? ? ? ? ? ? ? ? ? ? 48 85 C0 74 ? 44 39 40 ? 75 ? F7 40 ? ? ? ? ? 75 ? ? ? ? C3", 0);
+    ms_patterns[PATID_FWeakObjectPtr_Equal] = GetPattern("40 53 48 83 EC ? 48 8B D9 48 85 D2 74 ? 8B 52 ? ? ? 48 8D 0D", 0);
+    ms_patterns[PATID_FWeakObjectPtr_IsValid] = GetPattern("44 8B 41 ? 45 85 C0 74 ? ? ? 85 C9 78 ? 3B 0D ? ? ? ? 7D ? 8B C1 99 0F B7 D2 03 C2 C1 F8 ? 4C 63 C8 81 E1 ? ? ? ? 7D ? FF C9 81 C9 ? ? ? ? FF C1 48 63 C1 ? ? ? ? 48 8B 05 ? ? ? ? ? ? ? ? ? ? ? ? 48 85 C0 74 ? 44 39 40 ? 75 ? F7 40 ? ? ? ? ? 75 ? B0", 0);
+
+    ms_patterns[PATID_UTexture2D_UpdateResource] = GetPattern("40 53 48 83 EC ? 45 33 C0 33 D2 48 8B D9 E8 ? ? ? ? 33 C9", 0);
+
     ms_patterns[PATID_MKCamera_FillCameraCache] = GetPattern("48 8B C4 48 89 70 20 57 48 81 EC ? ? ? ? 0F 29 70 E8 0F 29 78 D8 48 8B 05", 0);
     ms_patterns[PATID_MKCamera_FillCameraCache_Hook] = GetPattern("48 8D 54 24 20 48 8B CF E8 ? ? ? ? 48 8B 8C 24 ? ? ? ? 48 8B BC 24", 8);
 

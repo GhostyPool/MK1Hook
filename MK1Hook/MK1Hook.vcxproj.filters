@@ -999,6 +999,15 @@
     <ClInclude Include="mk\VMProc.h">
       <Filter>Header Files\mk</Filter>
     </ClInclude>
+    <ClInclude Include="unreal\UTexture2D.h">
+      <Filter>Header Files\unreal</Filter>
+    </ClInclude>
+    <ClInclude Include="unreal\FWeakObjectPtr.h">
+      <Filter>Header Files\unreal</Filter>
+    </ClInclude>
+    <ClInclude Include="mk\Palette.h">
+      <Filter>Header Files\mk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1167,6 +1176,9 @@
       <Filter>Header Files\plugin</Filter>
     </ClCompile>
     <ClCompile Include="mk\VMProc.cpp">
+      <Filter>Header Files\mk</Filter>
+    </ClCompile>
+    <ClCompile Include="mk\Palette.cpp">
       <Filter>Header Files\mk</Filter>
     </ClCompile>
   </ItemGroup>

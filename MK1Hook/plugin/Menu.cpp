@@ -2312,6 +2312,25 @@ void MK12Menu::DrawPaletteEditorTab()
 					ApplyPaletteColour(data);
 				}
 
+				if (data->changedColour)
+				{
+					ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(200, 0, 0, 255));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(225, 0, 0, 255));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(175, 0, 0, 255));
+
+					if (ImGui::Button("Reset", ImVec2(ImGui::CalcItemWidth(), 0)))
+					{
+						data->changedColour = false;
+					}
+
+					if (ImGui::IsItemHovered())
+					{
+						ImGui::SetTooltip("Takes effect on character reload.");
+					}
+
+					ImGui::PopStyleColor(3);
+				}
+
 				ImGui::PopID();
 			}
 		}

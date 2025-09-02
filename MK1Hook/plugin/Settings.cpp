@@ -15,6 +15,8 @@ eSettingsManager::eSettingsManager()
 	bEnableConsoleWindow = ini.ReadBoolean("Settings", "bEnableConsoleWindow", true);
 	bUseInvasionsCH15Characters = ini.ReadBoolean("Settings", "bUseInvasionsCH15Characters", false);
 
+	strPalettesFolder = ini.ReadString("Settings", "strPalettesFolder", "Palettes");
+
 	iHookMenuOpenKey = user.ReadInteger("Settings", "iHookMenuOpenKey", -1);
 	if (iHookMenuOpenKey == -1) iHookMenuOpenKey = ini.ReadInteger("Settings", "iHookMenuOpenKey", VK_F1);
 

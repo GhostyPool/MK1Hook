@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include <string>
 
 struct eMouseSettings {
 	int sens;
@@ -16,6 +17,8 @@ public:
 
 	bool bEnableGamepadSupport;
 
+	//Palette
+	std::string strPalettesFolder;
 
 	// generic
 	int iHookMenuOpenKey;

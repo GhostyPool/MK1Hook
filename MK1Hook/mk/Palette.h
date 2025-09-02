@@ -16,19 +16,23 @@ struct PaletteData
 	const std::string			texName;
 	std::array<ImVec4, 16>		colours{};
 	bool						inMenu = false;
-	bool						changedColour = false;
+	bool						appliedPalette = false;
 
 	PaletteData(const UTexture2D* texObj)
 		: weakTex(texObj),
 		texName([&] {
-			char temp[256] = {};
-			snprintf(temp, sizeof(temp), "%ws", texObj->GetName().GetStr());
-			return std::string(temp);
-		}())
+		char temp[256] = {};
+		snprintf(temp, sizeof(temp), "%ws", texObj->GetName().GetStr());
+		return std::string(temp);
+			}())
 	{
 		colours.fill(ImVec4(1, 1, 1, 1));
 	}
 };
+
+//Saving/loading
+bool OpenPaletteLoadDialog(std::array<ImVec4, 16>& colours);
+void OpenPaletteSaveDialog(const std::array<ImVec4, 16>& colours, const wchar_t* fileName);
 
 void SetPaletteTexture_Hook(int64 ptr, FName ParameterName, UTexture2D* Value);
 void ApplyPaletteColour(PaletteData* data);

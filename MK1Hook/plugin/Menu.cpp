@@ -2303,31 +2303,81 @@ void MK12Menu::DrawPaletteEditorTab()
 					snprintf(label, sizeof(label), "Colour %d", i + 1);
 					ImGui::ColorEdit4(label, &data->colours[i].x);
 
+					if (i == 0)
+					{
+						ImGui::SameLine();
+						if (ImGui::Button("Randomize colours"))
+						{
+							for (int c = 0; c < 16; c++)
+							{
+								ImVec4 random = { (static_cast<float>(rand()) / RAND_MAX), (static_cast<float>(rand()) / RAND_MAX), (static_cast<float>(rand()) / RAND_MAX), 1 };
+								data->colours[c] = random;
+							}
+						}
+					}
+
 					ImGui::PopID();
 				}
 
-				if (ImGui::Button("Apply", ImVec2(ImGui::CalcItemWidth(), 0)))
+				ImVec4 buttonCol = ImGui::GetStyleColorVec4(ImGuiCol_Button);
+				ImVec4 hoveredCol = ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered);
+				ImVec4 activeCol = ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive);
+
+				//Apply button
+				bool pressedApplyKey = ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) || ImGui::IsKeyPressed(ImGuiKey_Space);
+				const float width = ImGui::CalcItemWidth();
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(buttonCol.x, buttonCol.y * 1.75f, buttonCol.z, buttonCol.w));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(hoveredCol.x * 0.65f, hoveredCol.y * 1.75f * 0.65f, hoveredCol.z * 0.65f, hoveredCol.w));
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeCol.x * 0.65f, activeCol.y * 1.75f * 0.65f, activeCol.z * 0.65f, activeCol.w));
+				if (ImGui::Button("Apply", ImVec2(width, 0)) || (pressedApplyKey && !ImGui::GetIO().WantTextInput))
 				{
-					data->changedColour = true;
 					ApplyPaletteColour(data);
+					data->appliedPalette = true;
 				}
+				ImGui::PopStyleColor(3);
 
-				if (data->changedColour)
+				const float halfWidth = (width - ImGui::GetStyle().ItemSpacing.x) * 0.5f;
+				//Save button
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(buttonCol.x * 0.5f, buttonCol.y, buttonCol.z * 1.75f, buttonCol.w));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(hoveredCol.x * 0.5f * 0.75f, hoveredCol.y * 0.75f, hoveredCol.z * 1.75f * 0.75f, hoveredCol.w));
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeCol.x * 0.5f * 0.75f, activeCol.y * 0.75f, activeCol.z * 5.0f * 0.75f, activeCol.w));
+				if (ImGui::Button("Save preset", ImVec2(halfWidth, 0)))
 				{
-					ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(200, 0, 0, 255));
-					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(225, 0, 0, 255));
-					ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(175, 0, 0, 255));
+					OpenPaletteSaveDialog(data->colours, std::wstring(data->texName.begin(), data->texName.end()).c_str());
+				}
+				ImGui::PopStyleColor(3);
 
-					if (ImGui::Button("Reset", ImVec2(ImGui::CalcItemWidth(), 0)))
+				//Load button
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(buttonCol.x * 3.0f, buttonCol.y, buttonCol.z, buttonCol.w));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(hoveredCol.x * 1.75f * 0.5f, hoveredCol.y * 1.75f * 0.5f, hoveredCol.z * 0.5f, hoveredCol.w));
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeCol.x * 1.75f * 0.5f, activeCol.y * 1.75f * 0.5f, activeCol.z * 0.5f, activeCol.w));
+				ImGui::SameLine();
+				if (ImGui::Button("Load preset", ImVec2(halfWidth, 0)))
+				{
+					bool loaded = OpenPaletteLoadDialog(data->colours);
+					if (loaded)
 					{
-						data->changedColour = false;
+						ApplyPaletteColour(data);
+						data->appliedPalette = true;
+					}
+				}
+				ImGui::PopStyleColor(3);
+
+				if (data->appliedPalette)
+				{
+					//Reset button
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(buttonCol.x * 1.75f, buttonCol.y * 0.5f, buttonCol.z * 0.5f, buttonCol.w));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(hoveredCol.x * 1.5f * 0.65f, hoveredCol.y * 0.5f * 0.65f, hoveredCol.z * 0.5f * 0.65f, hoveredCol.w));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeCol.x * 1.25f * 0.65f, activeCol.y * 0.5f * 0.65f, activeCol.z * 0.5f * 5.0f, activeCol.w));
+					if (ImGui::Button("Reset", ImVec2(width, 0)))
+					{
+						data->appliedPalette = false;
 					}
 
 					if (ImGui::IsItemHovered())
 					{
 						ImGui::SetTooltip("Takes effect on character reload.");
 					}
-
 					ImGui::PopStyleColor(3);
 				}
 

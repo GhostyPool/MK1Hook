@@ -7,6 +7,10 @@ enum EPatternID {
 
 	PATID_SetPaletteTexture,
 
+	PATID_SetupStartupAsset,
+
+	PATID_SetCVarByName,
+
 	PATID_BulkData_Lock,
 	PATID_BulkData_Unlock,
 	PATID_BulkData_Realloc,

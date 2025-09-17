@@ -31,6 +31,10 @@ void PatternSolver::Initialize()
 
     ms_patterns[PATID_SetPaletteTexture] = GetPattern("E8 ? ? ? ? 48 8B 4C 24 ? 48 8B 7C 24 ? 48 8B 74 24 ? 48 8B 6C 24 ? 48 8B 9C 24", 0);
 
+    ms_patterns[PATID_SetupStartupAsset] = GetPattern("E8 ? ? ? ? 48 8D 93 ? ? ? ? 49 8D 8E ? ? ? ? E8 ? ? ? ? 0F B6 83 ? ? ? ? 41 88 86", 0);
+
+    ms_patterns[PATID_SetCVarByName] = GetPattern("48 89 5C 24 ? 57 48 83 EC ? 48 8B D9 8B FA 48 8B 0D ? ? ? ? 48 85 C9 75 ? E8 ? ? ? ? 48 8B 0D ? ? ? ? ? ? ? 41 B0 ? 48 8B D3 FF 90 ? ? ? ? 48 8B D8", 0);
+
     ms_patterns[PATID_BulkData_Lock] = GetPattern("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 8B 41 ? 8B FA", 0);
     ms_patterns[PATID_BulkData_Unlock] = GetPattern("8B 41 ? 48 8B D1 C1 E8 ? C6 41", 0);
     ms_patterns[PATID_BulkData_Realloc] = GetPattern("48 89 5C 24 ? 57 48 83 EC ? 48 8B F9 45 33 C0 48 8B 49 ? 48 8B DA", 0);

@@ -14,6 +14,11 @@ eSettingsManager::eSettingsManager()
 	bEnableGamepadSupport = ini.ReadBoolean("Settings", "bEnableGamepadSupport", true);
 	bEnableConsoleWindow = ini.ReadBoolean("Settings", "bEnableConsoleWindow", true);
 	bUseInvasionsCH15Characters = ini.ReadBoolean("Settings", "bUseInvasionsCH15Characters", false);
+	bForceUnlockItems = ini.ReadBoolean("Settings", "bForceUnlockItems", false);
+	if (bForceUnlockItems)
+		bUseOfflineInventory = true;
+	else
+		bUseOfflineInventory = ini.ReadBoolean("Settings", "bUseOfflineInventory", false);
 
 	strPalettesFolder = ini.ReadString("Settings", "strPalettesFolder", "Palettes");
 
@@ -119,6 +124,9 @@ void eSettingsManager::SaveSettings()
 	CIniReader ini("mk1hook.ini");
 	ini.WriteBoolean("Settings", "bEnableConsoleWindow", bEnableConsoleWindow);
 	ini.WriteBoolean("Settings", "bEnableGamepadSupport", bEnableGamepadSupport);
+	ini.WriteBoolean("Settings", "bUseInvasionsCH15Characters", bUseInvasionsCH15Characters);
+	ini.WriteBoolean("Settings", "bForceUnlockItems", bForceUnlockItems);
+	ini.WriteBoolean("Settings", "bUseOfflineInventory", bUseOfflineInventory);
 }
 
 void eSettingsManager::ResetKeys()

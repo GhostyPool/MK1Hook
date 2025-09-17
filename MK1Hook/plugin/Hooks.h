@@ -13,7 +13,7 @@ extern void(__fastcall* pProcessPostProcessSettings)(int64, int64, float);
 extern void(__fastcall* orgFightStartup)(int64);
 extern void(*orgLoadMainMenuBGND)(int64 bgndInfo, FName name);
 extern void(*pSetPartnerCharacter)(int64, FString, int, int);
-
+extern int64(*orgSetupStartupAsset)(int64, int64);
 
 
 void ProcessPostProcessSettings(int64 settings, int64 newSettings, float a3);
@@ -31,5 +31,6 @@ void USceneComponent_SetRelativeScale3D(int64 obj, FVector* scale);
 void FightStartup_Hook(int64 ptr);
 void LoadMainMenuBGND_Hook(int64 bgndInfo, FName name);
 void SetPartnerCharacter_Hook(int64 ptr, FString name, int plrNum, int flag);
+int64 SetupStartupAsset_Hook(int64 a1, int64 a2);
 
 extern void (*orgUSceneComponent_SetWorldScale3D)(int64 obj, FVector* scale);

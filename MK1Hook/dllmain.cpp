@@ -55,7 +55,9 @@ void OnInitializeHook()
 	InjectHook(_pattern(PATID_FEngineLoop_Tick_Hook), tramp->Jump(&FEngineLoop::Tick));
 	InjectHook(_pattern(PATID_MKCamera_FillCameraCache_Hook), tramp->Jump(&MKCamera::HookedFillCameraCache));
 
-	//Palettes
+	ReadCall(_pattern(PATID_SetupStartupAsset), orgSetupStartupAsset);
+	InjectHook(_pattern(PATID_SetupStartupAsset), tramp->Jump(SetupStartupAsset_Hook));
+
 	ReadCall(_pattern(PATID_SetPaletteTexture), orgSetTextureParameterValue);
 	InjectHook(_pattern(PATID_SetPaletteTexture), tramp->Jump(SetPaletteTexture_Hook));
 

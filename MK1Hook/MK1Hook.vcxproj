@@ -126,6 +126,7 @@
     <ClInclude Include="minhook\src\trampoline.h" />
     <ClInclude Include="mk\CharacterDefinition.h" />
     <ClInclude Include="mk\ContentDefinition.h" />
+    <ClInclude Include="mk\CVarHelper.h" />
     <ClInclude Include="mk\Engine.h" />
     <ClInclude Include="mk\FightingTeamDefinition.h" />
     <ClInclude Include="mk\GameInfo.h" />

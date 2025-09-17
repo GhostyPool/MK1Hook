@@ -1,11 +1,29 @@
 #include "Hooks.h"
 #include "..\unreal\UWorld.h"
+#include "..\mk\CVarHelper.h"
+#include "Settings.h"
 
 void (*orgUSceneComponent_SetWorldScale3D)(int64 obj, FVector* scale);
 void(__fastcall* pProcessPostProcessSettings)(int64, int64, float) = nullptr;
 void(__fastcall* orgFightStartup)(int64) = nullptr;
 void(*orgLoadMainMenuBGND)(int64 bgndInfo, FName name) = nullptr;
 void(*pSetPartnerCharacter)(int64, FString, int, int) = nullptr;
+int64(*orgSetupStartupAsset)(int64, int64) = nullptr;
+
+int64 SetupStartupAsset_Hook(int64 a1, int64 a2)
+{
+	int64 ptr = 0;
+	if (orgSetupStartupAsset)
+		ptr = orgSetupStartupAsset(a1, a2);
+
+	if (SettingsMgr->bForceUnlockItems)
+		*(bool*)((char*)a1 + 584) = true;
+
+	if (SettingsMgr->bUseOfflineInventory)
+		CVarSetter::SetCVarByName(L"NRS.MK12Inventory.UseOfflineInventory", 1);
+
+	return ptr;
+}
 
 void ProcessPostProcessSettings(int64 settings, int64 newSettings, float a3)
 {

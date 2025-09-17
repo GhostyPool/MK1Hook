@@ -1008,6 +1008,9 @@
     <ClInclude Include="mk\Palette.h">
       <Filter>Header Files\mk</Filter>
     </ClInclude>
+    <ClInclude Include="mk\CVarHelper.h">
+      <Filter>Header Files\mk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

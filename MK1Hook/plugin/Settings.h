@@ -16,6 +16,8 @@ public:
 	bool bUseInvasionsCH15Characters;
 
 	bool bEnableGamepadSupport;
+	bool bForceUnlockItems;
+	bool bUseOfflineInventory;
 
 	//Palette
 	std::string strPalettesFolder;

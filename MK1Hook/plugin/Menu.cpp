@@ -1418,6 +1418,7 @@ void MK12Menu::DrawSettings()
 
 	static int settingID = 0;
 	static const char* settingNames[] = {
+		"Game",
 		"Menu",
 		"INI",	
 		"Keys",
@@ -1425,6 +1426,7 @@ void MK12Menu::DrawSettings()
 	};
 
 	enum eSettings {
+		GAME,
 		MENU,
 		INI,
 		KEYS,
@@ -1449,24 +1451,36 @@ void MK12Menu::DrawSettings()
 
 	switch (settingID)
 	{
+	case GAME:
+		if (ImGui::Checkbox("Force unlock items", &SettingsMgr->bForceUnlockItems))
+		{
+			SettingsMgr->bUseOfflineInventory = SettingsMgr->bForceUnlockItems;
+		}
+		ImGui::SameLine(); ShowHelpMarker("Allows you to use any item from the game. Requires a game restart!");
+		if (SettingsMgr->bForceUnlockItems)
+			ImGui::BeginDisabled(true);
+		ImGui::Checkbox("Use offline inventory", &SettingsMgr->bUseOfflineInventory);
+		if (SettingsMgr->bForceUnlockItems)
+			ImGui::EndDisabled();
+		break;
 	case MENU:
 		ImGui::TextWrapped("All user settings are saved to mk1hook_user.ini.");
 		ImGui::Text("Menu Scale");
 		ImGui::PushItemWidth(-FLT_MIN);
 		ImGui::InputFloat("##", &SettingsMgr->fMenuScale);
 		ImGui::PopItemWidth();
-		break;
-	case INI:            
-		ImGui::TextWrapped("These settings control MK1Hook.ini options. Any changes require game restart to take effect.");
-		ImGui::Checkbox("Debug Console", &SettingsMgr->bEnableConsoleWindow);
-		ImGui::Checkbox("Gamepad Support", &SettingsMgr->bEnableGamepadSupport);
 		ImGui::Separator();
 		if (ImGui::Checkbox("Use Invasions CH15 Characters", &SettingsMgr->bUseInvasionsCH15Characters))
 		{
 			SetupCharacterLists();
 		}
 		ImGui::SameLine();
-		ShowHelpMarker("Replaces CH15 characters in the character list with variants from Invasions, they are more complete with cinematics. This option does not require a restart.");
+		ShowHelpMarker("Replaces CH15 characters in the character list with variants from Invasions, they are more complete with cinematics.");
+		break;
+	case INI:            
+		ImGui::TextWrapped("These settings control MK1Hook.ini options. Any changes require game restart to take effect.");
+		ImGui::Checkbox("Debug Console", &SettingsMgr->bEnableConsoleWindow);
+		ImGui::Checkbox("Gamepad Support", &SettingsMgr->bEnableGamepadSupport);
 		break;
 	case KEYS:
 		if (m_bPressingKey)

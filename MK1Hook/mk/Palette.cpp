@@ -2,7 +2,6 @@
 #include "../unreal/UObject.h"
 #include "../plugin/Menu.h"
 #include "../plugin/Settings.h"
-#include <unordered_map>
 #include <unordered_set>
 #include <array>
 #include <shobjidl.h>
@@ -16,18 +15,11 @@
 
 void(__fastcall* orgSetTextureParameterValue)(int64, FName, UTexture2D*) = nullptr;
 
+std::unordered_map<FName, PaletteData, FNameHash> g_palettes;
+std::queue<Pal_event> pal_event_queue;
+std::mutex pal_event_queue_mtx;
+
 static const char presetHeader[8] = "Palette";
-
-struct FNameHash
-{
-	size_t operator()(const FName& name) const noexcept
-	{
-		return (static_cast<size_t>(name.Index) << 32) ^ static_cast<size_t>(name.Number);
-	}
-};
-
-static std::unordered_map<FName, PaletteData, FNameHash> g_palettes;
-
 static bool WritePresetToDisk(const std::array<ImVec4, 16>& colours, const wchar_t* path)
 {
 	FILE* f = _wfopen(path, L"wb");
@@ -53,7 +45,6 @@ static bool WritePresetToDisk(const std::array<ImVec4, 16>& colours, const wchar
 	std::fclose(f);
 	return true;
 }
-
 static bool ReadPresetFromDisk(std::array<ImVec4, 16>& colours, const wchar_t* path)
 {
 	FILE* f = _wfopen(path, L"rb");
@@ -82,12 +73,6 @@ static bool ReadPresetFromDisk(std::array<ImVec4, 16>& colours, const wchar_t* p
 	return true;
 }
 
-static void UninitializeCom(bool needsUninit)
-{
-	if (needsUninit)
-		CoUninitialize();
-}
-
 static void ShowMessageBox(bool success, bool saving)
 {
 	if (success)
@@ -103,17 +88,15 @@ static void ShowMessageBox(bool success, bool saving)
 		MessageBoxW(nullptr, message.c_str(), L"Error", MB_OK | MB_ICONERROR);
 	}
 }
-
-static void ExitWithError(HRESULT hr, bool needsUninit, bool saving)
+static void PrintErrorMessage(HRESULT hr, bool saving)
 {
-	UninitializeCom(needsUninit);
-	ShowMessageBox(false, saving);
 	const char* func = saving ? "OpenPaletteSaveDialog" : "OpenPaletteLoadDialog";
-	eLog::Message(func, "Failed to save palette, error: 0x%08X", (unsigned)hr);
+	eLog::Message(func, "Error: 0x%08X", (unsigned)hr);
 }
 
 bool OpenPaletteLoadDialog(std::array<ImVec4, 16>& colours)
 {
+	bool loaded = false;
 	bool needUninit = false;
 	HRESULT hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 	if (hr == S_OK) needUninit = true;
@@ -121,16 +104,16 @@ bool OpenPaletteLoadDialog(std::array<ImVec4, 16>& colours)
 	else if (hr == RPC_E_CHANGED_MODE) needUninit = false;
 	else
 	{
-		ExitWithError(hr, false, false);
-		return false;
+		PrintErrorMessage(hr, false);
+		goto leave;
 	}
 
 	IFileOpenDialog* dialog = nullptr;
 	hr = CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&dialog));
 	if (FAILED(hr))
 	{
-		ExitWithError(hr, needUninit, false);
-		return false;
+		PrintErrorMessage(hr, false);
+		goto leave;
 	}
 
 	COMDLG_FILTERSPEC filters[] =
@@ -143,44 +126,31 @@ bool OpenPaletteLoadDialog(std::array<ImVec4, 16>& colours)
 	dialog->SetTitle(L"Load palette preset");
 
 	hr = dialog->Show(nullptr);
-	if (FAILED(hr))
-	{
-		dialog->Release();
-		UninitializeCom(needUninit);
-		if (hr == HRESULT_FROM_WIN32(ERROR_CANCELLED)) return false;
-		ExitWithError(hr, false, false);
-		return false;
-	}
+	if (FAILED(hr)) goto release_dialog;
 
 	IShellItem* file = nullptr;
 	hr = dialog->GetResult(&file);
-	if (FAILED(hr) || !file)
-	{
-		dialog->Release();
-		ExitWithError(hr, needUninit, false);
-		return false;
-	}
+	if (FAILED(hr) || !file) goto release_dialog;
 
 	PWSTR pszPath = nullptr;
 	hr = file->GetDisplayName(SIGDN_FILESYSPATH, &pszPath);
 	file->Release();
-	if (FAILED(hr) || !pszPath)
-	{
-		dialog->Release();
-		ExitWithError(hr, needUninit, false);
-		return false;
-	}
+	if (FAILED(hr) || !pszPath) goto release_dialog;
 
-	bool loaded = ReadPresetFromDisk(colours, pszPath);
+	loaded = ReadPresetFromDisk(colours, pszPath);
 	CoTaskMemFree(pszPath);
+
+release_dialog:
 	dialog->Release();
-	UninitializeCom(needUninit);
-	ShowMessageBox(loaded, false);
+
+leave:
+	if (needUninit) CoUninitialize();
+	if (hr != HRESULT_FROM_WIN32(ERROR_CANCELLED)) ShowMessageBox(loaded, false);
 	return loaded;
 }
-
 void OpenPaletteSaveDialog(const std::array<ImVec4, 16>& colours, const wchar_t* fileName)
 {
+	bool saved = false;
 	bool needUninit = false;
 	HRESULT hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 	if (hr == S_OK) needUninit = true;
@@ -188,16 +158,16 @@ void OpenPaletteSaveDialog(const std::array<ImVec4, 16>& colours, const wchar_t*
 	else if (hr == RPC_E_CHANGED_MODE) needUninit = false;
 	else
 	{
-		ExitWithError(hr, false, true);
-		return;
+		PrintErrorMessage(hr, true);
+		goto leave;
 	}
 
 	IFileSaveDialog* dialog = nullptr;
 	hr = CoCreateInstance(CLSID_FileSaveDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&dialog));
 	if (FAILED(hr))
 	{
-		ExitWithError(hr, needUninit, true);
-		return;
+		PrintErrorMessage(hr, true);
+		goto leave;
 	}
 
 	COMDLG_FILTERSPEC filters[] =
@@ -212,45 +182,30 @@ void OpenPaletteSaveDialog(const std::array<ImVec4, 16>& colours, const wchar_t*
 	dialog->SetTitle(L"Save palette preset");
 
 	hr = dialog->Show(nullptr);
-	if (FAILED(hr))
-	{
-		dialog->Release();
-		UninitializeCom(needUninit);
-		if (hr == HRESULT_FROM_WIN32(ERROR_CANCELLED)) return;
-		ExitWithError(hr, false, true);
-		return;
-	}
+	if (FAILED(hr)) goto release_dialog;
 
 	IShellItem* file = nullptr;
 	hr = dialog->GetResult(&file);
-	if (FAILED(hr) || !file)
-	{
-		dialog->Release();
-		ExitWithError(hr, needUninit, true);
-		return;
-	}
+	if (FAILED(hr) || !file) goto release_dialog;
 
 	PWSTR pszPath = nullptr;
 	hr = file->GetDisplayName(SIGDN_FILESYSPATH, &pszPath);
 	file->Release();
-	if (FAILED(hr) || !pszPath)
-	{
-		dialog->Release();
-		ExitWithError(hr, needUninit, true);
-		return;
-	}
+	if (FAILED(hr) || !pszPath) goto release_dialog;
 
-	bool saved = WritePresetToDisk(colours, pszPath);
+	saved = WritePresetToDisk(colours, pszPath);
 	CoTaskMemFree(pszPath);
+
+release_dialog:
 	dialog->Release();
-	UninitializeCom(needUninit);
-	ShowMessageBox(saved, true);
+
+leave:
+	if (needUninit) CoUninitialize();
+	if (hr != HRESULT_FROM_WIN32(ERROR_CANCELLED)) ShowMessageBox(saved, true);
 }
 
 static wchar_t palettesFolder[MAX_PATH] = {};
 static bool gotPalettesFolder = false;
-static bool cantLoadFromDisk = false;
-
 static void CheckAndLoadFromDisk(PaletteData& data)
 {
 	if (!gotPalettesFolder)
@@ -258,44 +213,30 @@ static void CheckAndLoadFromDisk(PaletteData& data)
 		GetModuleFileNameW(nullptr, palettesFolder, MAX_PATH);
 		PathRemoveFileSpecW(palettesFolder);
 
-		bool success = false;
-		int folderLen = MultiByteToWideChar(CP_UTF8, 0, SettingsMgr->strPalettesFolder.c_str(), -1, nullptr, 0);
-		if (folderLen > 1)
+		std::wstring folder(SettingsMgr->szPalettesFolder, SettingsMgr->szPalettesFolder + 255);
+		if (PathAppendW(palettesFolder, folder.c_str()))
+			goto success;
+
+		eLog::Message(__FUNCTION__, "An error occurred when trying to use the specified palettes folder: %s! Falling back to default folder \"Palettes\"!", SettingsMgr->szPalettesFolder);
+		if (!PathAppendW(palettesFolder, L"Palettes"))
 		{
-			std::wstring folder;
-			folder.resize(folderLen - 1);
-			if (MultiByteToWideChar(CP_UTF8, 0, SettingsMgr->strPalettesFolder.c_str(), -1, folder.data(), folderLen))
-			{
-				if (PathAppendW(palettesFolder, folder.c_str()))
-				{
-					success = true;
-				}
-			}
+			eLog::Message(__FUNCTION__, "Could not proceed trying to load palettes from disk, path exceeded maximum allowed path length!");
+			return;
 		}
 
-		if (!success)
-		{
-			eLog::Message(__FUNCTION__, "An error occurred when trying to use the specified palettes folder: %s! Falling back to default folder \"Palettes\"!", SettingsMgr->strPalettesFolder.c_str());
-			if (!PathAppendW(palettesFolder, L"Palettes"))
-			{
-				eLog::Message(__FUNCTION__, "Palettes folder path exceeded maximum allowed path length!");
-				cantLoadFromDisk = true;
-				return;
-			}
-		}
+	success:
 		gotPalettesFolder = true;
 	}
 
 	wchar_t filePath[MAX_PATH] = {};
 	wcsncpy_s(filePath, palettesFolder, _TRUNCATE);
 
-	std::wstring fileName(data.texName.begin(), data.texName.end());
+	std::wstring fileName(data.name.begin(), data.name.end());
 	fileName += L".palette";
 
 	if (!PathAppendW(filePath, fileName.c_str()))
 	{
-		eLog::Message(__FUNCTION__, "Could not proceed trying to load: %s from disk, path exceeded maximum allowed path length!", data.texName.c_str());
-		cantLoadFromDisk = true;
+		eLog::Message(__FUNCTION__, "Could not proceed trying to load: %s from disk, path exceeded maximum allowed path length!", data.name.c_str());
 		return;
 	}
 
@@ -305,20 +246,12 @@ static void CheckAndLoadFromDisk(PaletteData& data)
 	bool loaded = ReadPresetFromDisk(data.colours, filePath);
 	if (loaded)
 	{
-		eLog::Message("MK1Hook::Info()", "Loaded palette: %s from disk.", data.texName.c_str());
+		eLog::Message("MK1Hook::Info()", "Loaded palette: %s from disk.", data.name.c_str());
 		ApplyPaletteColour(&data);
 		data.appliedPalette = true;
 	}
 	else
-		eLog::Message(__FUNCTION__, "Could not load palette: %s from disk, its format is invalid!", data.texName.c_str());
-}
-
-static bool IsSupported(UTexture2D* texture)
-{
-	if (texture->PlatformData->PixelFormat == 0x2)
-		return true;
-	else
-		return false;
+		eLog::Message(__FUNCTION__, "Could not load palette : %s from disk, its format is invalid!", data.name.c_str());
 }
 
 static std::array<uint8_t, 4> RGBAToBGRA(ImVec4 colour)
@@ -330,10 +263,9 @@ static std::array<uint8_t, 4> RGBAToBGRA(ImVec4 colour)
 
 	return { B, G, R, A };
 }
-
 void ApplyPaletteColour(PaletteData* data)
 {
-	if (data->weakTex.IsValid())
+	if (data->weakPtr.IsValid())
 	{
 		std::array<uint8_t, 2048> bytes{};
 
@@ -349,38 +281,29 @@ void ApplyPaletteColour(PaletteData* data)
 			}
 		}
 
-		UTexture2D* texture = static_cast<UTexture2D*>(data->weakTex.Get());
+		UTexture2D* texture = static_cast<UTexture2D*>(data->weakPtr.Get());
 		FBulkDataBase& bulkdata = texture->PlatformData->Mips.Get(0)->BulkData;
 
 		if (bulkdata.isSingleUse())
 			bulkdata.BulkDataFlags &= ~0x8;
 
 		void* data = bulkdata.Lock(LOCK_READ_WRITE);
+		if (!data) data = bulkdata.Realloc(2048);
 
 		if (!data)
 		{
-			data = bulkdata.Realloc(2048);
-		}
-
-		bool success = false;
-		if (data)
-		{
-			memcpy(data, bytes.data(), 2048);
-			success = true;
-		}
-
-		bulkdata.Unlock();
-
-		if (!success)
-		{
-			eLog::Message(__FUNCTION__, "Was unable to apply new palette colour since BulkData returned nullptr!");
+			eLog::Message(__FUNCTION__, "Unable to apply new palette colour as BulkData is still nullptr after reallocation!");
 			return;
 		}
+
+		memcpy(data, bytes.data(), 2048);
+
+		bulkdata.Unlock();
 
 		texture->UpdateResource();
 	}
 	else
-		eLog::Message(__FUNCTION__, "Cannot apply new palette colour to invalid palette: %s!", data->texName.c_str());
+		eLog::Message(__FUNCTION__, "Cannot apply new palette colour to invalid palette: %s!", data->name.c_str());
 }
 
 void SetPaletteTexture_Hook(int64 ptr, FName ParameterName, UTexture2D* Value)
@@ -391,33 +314,37 @@ void SetPaletteTexture_Hook(int64 ptr, FName ParameterName, UTexture2D* Value)
 	{
 		PaletteData& existingPal = i->second;
 
-		if (!existingPal.weakTex.IsValid())
+		if (!existingPal.weakPtr.IsValid())
 		{
-			existingPal.weakTex = Value;
+			existingPal.weakPtr = Value;
 
 			if (existingPal.appliedPalette)
-			{
 				ApplyPaletteColour(&existingPal);
-			}
 
 			if (!existingPal.inMenu)
 			{
-				TheMenu->m_Palettes.emplace_back(&existingPal);
+				{
+					std::unique_lock<std::shared_mutex> lock(TheMenu->m_pal_ui_mtx);
+					TheMenu->m_Palettes_UI.emplace_back(existingPal, i->first);
+				}
 				existingPal.inMenu = true;
 			}
 		}
 	}
 	else
 	{
-		if (IsSupported(Value))
+		if (Value->PlatformData->PixelFormat == 0x2)
 		{
-			auto result = g_palettes.emplace(palName, PaletteData(Value));
-			PaletteData& data = result.first->second;
+			auto entry = g_palettes.emplace(palName, PaletteData(Value)).first;
+			PaletteData& data = entry->second;
 
-			if (!cantLoadFromDisk)
+			if (SettingsMgr->bLoadPalettesAtStartup)
 				CheckAndLoadFromDisk(data);
 
-			TheMenu->m_Palettes.emplace_back(&data);
+			{
+				std::unique_lock<std::shared_mutex> lock(TheMenu->m_pal_ui_mtx);
+				TheMenu->m_Palettes_UI.emplace_back(data, entry->first);
+			}
 			data.inMenu = true;
 		}
 	}

@@ -17,8 +17,9 @@ public:
 
 	bool bEnableGamepadSupport;
 
-	//Palette
-	std::string strPalettesFolder;
+	//Palette specific
+	bool bLoadPalettesAtStartup;
+	char szPalettesFolder[255];
 
 	// generic
 	int iHookMenuOpenKey;

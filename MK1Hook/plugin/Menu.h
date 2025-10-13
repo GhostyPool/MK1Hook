@@ -9,6 +9,7 @@
 #include "../helper/eKeyboardMan.h"
 #include "../helper/eGamepadManager.h"
 #include "../utils.h"
+#include <shared_mutex>
 
 
 class MKCamera;
@@ -249,7 +250,8 @@ public:
 	std::vector<ScriptDataFunction> m_DataFunctionsList;
 
 	//Palettes
-	std::vector<PaletteData*> m_Palettes;
+	std::vector<PaletteUI> m_Palettes_UI;
+	std::shared_mutex m_pal_ui_mtx;
 
 	// camera
 

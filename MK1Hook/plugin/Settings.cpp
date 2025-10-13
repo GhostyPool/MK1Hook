@@ -20,7 +20,8 @@ eSettingsManager::eSettingsManager()
 	else
 		bUseOfflineInventory = ini.ReadBoolean("Settings", "bUseOfflineInventory", false);
 
-	strPalettesFolder = ini.ReadString("Settings", "strPalettesFolder", "Palettes");
+	bLoadPalettesAtStartup = ini.ReadBoolean("Settings", "bLoadPalettesAtStartup", false);
+	snprintf(szPalettesFolder, sizeof(szPalettesFolder), "%s", ini.ReadString("Settings", "szPalettesFolder", "Palettes"));
 
 	iHookMenuOpenKey = user.ReadInteger("Settings", "iHookMenuOpenKey", -1);
 	if (iHookMenuOpenKey == -1) iHookMenuOpenKey = ini.ReadInteger("Settings", "iHookMenuOpenKey", VK_F1);
@@ -127,6 +128,8 @@ void eSettingsManager::SaveSettings()
 	ini.WriteBoolean("Settings", "bUseInvasionsCH15Characters", bUseInvasionsCH15Characters);
 	ini.WriteBoolean("Settings", "bForceUnlockItems", bForceUnlockItems);
 	ini.WriteBoolean("Settings", "bUseOfflineInventory", bUseOfflineInventory);
+	ini.WriteBoolean("Settings", "bLoadPalettesAtStartup", bLoadPalettesAtStartup);
+	ini.WriteString("Settings", "szPalettesFolder", szPalettesFolder);
 }
 
 void eSettingsManager::ResetKeys()

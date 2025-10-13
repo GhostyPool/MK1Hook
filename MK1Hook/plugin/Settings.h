@@ -19,8 +19,9 @@ public:
 	bool bForceUnlockItems;
 	bool bUseOfflineInventory;
 
-	//Palette
-	std::string strPalettesFolder;
+	//Palette specific
+	bool bLoadPalettesAtStartup;
+	char szPalettesFolder[255];
 
 	// generic
 	int iHookMenuOpenKey;

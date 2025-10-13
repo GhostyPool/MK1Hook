@@ -547,6 +547,7 @@ void MK12Menu::SetupCharacterLists()
 
 void MK12Menu::Initialize()
 {
+	m_Palettes_UI.clear();
 	SetupCharacterLists();
 }
 
@@ -1420,9 +1421,10 @@ void MK12Menu::DrawSettings()
 	static const char* settingNames[] = {
 		"Game",
 		"Menu",
-		"INI",	
+		"INI",
 		"Keys",
-		"Mouse"
+		"Mouse",
+		"Misc"
 	};
 
 	enum eSettings {
@@ -1430,7 +1432,8 @@ void MK12Menu::DrawSettings()
 		MENU,
 		INI,
 		KEYS,
-		MOUSE
+		MOUSE,
+		MISC
 	};
 
 	ImGui::BeginChild("##settings", { 12 * ImGui::GetFontSize(), 0 }, true);
@@ -1452,10 +1455,9 @@ void MK12Menu::DrawSettings()
 	switch (settingID)
 	{
 	case GAME:
+		ImGui::TextWrapped("Game related settings");
 		if (ImGui::Checkbox("Force unlock items", &SettingsMgr->bForceUnlockItems))
-		{
 			SettingsMgr->bUseOfflineInventory = SettingsMgr->bForceUnlockItems;
-		}
 		ImGui::SameLine(); ShowHelpMarker("Allows you to use any item from the game. Requires a game restart!");
 		if (SettingsMgr->bForceUnlockItems)
 			ImGui::BeginDisabled(true);
@@ -1470,14 +1472,17 @@ void MK12Menu::DrawSettings()
 		ImGui::InputFloat("##", &SettingsMgr->fMenuScale);
 		ImGui::PopItemWidth();
 		ImGui::Separator();
-		if (ImGui::Checkbox("Use Invasions CH15 Characters", &SettingsMgr->bUseInvasionsCH15Characters))
-		{
-			SetupCharacterLists();
-		}
-		ImGui::SameLine();
-		ShowHelpMarker("Replaces CH15 characters in the character list with variants from Invasions, they are more complete with cinematics.");
+		ImGui::TextWrapped("Palette editor settings");
+		ImGui::Checkbox("Load palettes at startup", &SettingsMgr->bLoadPalettesAtStartup);
+		ImGui::SameLine(); ShowHelpMarker("Loads any palette presets (.palette) at startup from the folder defined below. Palette file names must match the palette texture names. (e.g. \"T_SubZero_Skin001_Pal001.palette\")");
+		if (!SettingsMgr->bLoadPalettesAtStartup)
+			ImGui::BeginDisabled(true);
+		ImGui::TextWrapped("Palettes folder");
+		ImGui::SameLine(); ImGui::InputText("##palfolder", SettingsMgr->szPalettesFolder, sizeof(SettingsMgr->szPalettesFolder));
+		if (!SettingsMgr->bLoadPalettesAtStartup)
+			ImGui::EndDisabled();
 		break;
-	case INI:            
+	case INI:
 		ImGui::TextWrapped("These settings control MK1Hook.ini options. Any changes require game restart to take effect.");
 		ImGui::Checkbox("Debug Console", &SettingsMgr->bEnableConsoleWindow);
 		ImGui::Checkbox("Gamepad Support", &SettingsMgr->bEnableGamepadSupport);
@@ -1500,7 +1505,7 @@ void MK12Menu::DrawSettings()
 		KeyBind(&SettingsMgr->iToggleSlowMoKey, "Toggle Gamespeed/Slow Motion", "slomo");
 		KeyBind(&SettingsMgr->iToggleFreezeWorldKey, "Freeze World", "freeze");
 		ImGui::Separator();
-		ImGui::LabelText("##","Camera");
+		ImGui::LabelText("##", "Camera");
 		ImGui::Separator();
 
 		KeyBind(&SettingsMgr->iFreeCameraKeyFOVPlus, "FOV+", "fov_plus");
@@ -1548,6 +1553,15 @@ void MK12Menu::DrawSettings()
 		ImGui::PopItemWidth();
 		ImGui::Checkbox("Invert X", &SettingsMgr->mouse.invert_x);
 		ImGui::Checkbox("Invert Y", &SettingsMgr->mouse.invert_y);
+		break;
+	case MISC:
+		ImGui::TextWrapped("Miscellaneous settings");
+		if (ImGui::Checkbox("Use Invasions CH15 Characters", &SettingsMgr->bUseInvasionsCH15Characters))
+		{
+			SetupCharacterLists();
+		}
+		ImGui::SameLine();
+		ShowHelpMarker("Replaces CH15 characters in the character list with variants from Invasions, they are more complete with cinematics.");
 		break;
 	default:
 		break;
@@ -2293,29 +2307,22 @@ void MK12Menu::DrawModifiersTab()
 
 void MK12Menu::DrawPaletteEditorTab()
 {
-	std::erase_if(m_Palettes, [](PaletteData* data) {
-		if (!data->weakTex.IsValid()) {
-			data->inMenu = false;
-			return true;
-		}
-		return false;
-		});
-
-	if (!m_Palettes.empty())
+	std::shared_lock<std::shared_mutex> lock(m_pal_ui_mtx);
+	if (!m_Palettes_UI.empty())
 	{
-		for (PaletteData* data : m_Palettes)
+		for (PaletteUI& ui_data : m_Palettes_UI)
 		{
-			if (ImGui::CollapsingHeader(data->texName.c_str()))
+			if (ImGui::CollapsingHeader(ui_data.name.c_str()))
 			{
-				ImGui::PushID(data);
+				ImGui::PushID(&ui_data);
 
 				for (int i = 0; i < 16; i++)
 				{
 					ImGui::PushID(i);
 
-					static char label[32] = {};
+					char label[32] = {};
 					snprintf(label, sizeof(label), "Colour %d", i + 1);
-					ImGui::ColorEdit4(label, &data->colours[i].x);
+					ImGui::ColorEdit4(label, &ui_data.colours[i].x);
 
 					if (i == 0)
 					{
@@ -2325,7 +2332,7 @@ void MK12Menu::DrawPaletteEditorTab()
 							for (int c = 0; c < 16; c++)
 							{
 								ImVec4 random = { (static_cast<float>(rand()) / RAND_MAX), (static_cast<float>(rand()) / RAND_MAX), (static_cast<float>(rand()) / RAND_MAX), 1 };
-								data->colours[c] = random;
+								ui_data.colours[c] = random;
 							}
 						}
 					}
@@ -2345,8 +2352,9 @@ void MK12Menu::DrawPaletteEditorTab()
 				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeCol.x * 0.65f, activeCol.y * 1.75f * 0.65f, activeCol.z * 0.65f, activeCol.w));
 				if (ImGui::Button("Apply", ImVec2(width, 0)) || (pressedApplyKey && !ImGui::GetIO().WantTextInput))
 				{
-					ApplyPaletteColour(data);
-					data->appliedPalette = true;
+					ui_data.appliedPalette = true;
+					std::lock_guard<std::mutex> lock(pal_event_queue_mtx);
+					pal_event_queue.emplace(Pal_event_payload(ui_data.fname, ui_data.colours), Pal_event_type::Apply);
 				}
 				ImGui::PopStyleColor(3);
 
@@ -2357,7 +2365,7 @@ void MK12Menu::DrawPaletteEditorTab()
 				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeCol.x * 0.5f * 0.75f, activeCol.y * 0.75f, activeCol.z * 5.0f * 0.75f, activeCol.w));
 				if (ImGui::Button("Save preset", ImVec2(halfWidth, 0)))
 				{
-					OpenPaletteSaveDialog(data->colours, std::wstring(data->texName.begin(), data->texName.end()).c_str());
+					OpenPaletteSaveDialog(ui_data.colours, std::wstring(ui_data.name.begin(), ui_data.name.end()).c_str());
 				}
 				ImGui::PopStyleColor(3);
 
@@ -2368,16 +2376,16 @@ void MK12Menu::DrawPaletteEditorTab()
 				ImGui::SameLine();
 				if (ImGui::Button("Load preset", ImVec2(halfWidth, 0)))
 				{
-					bool loaded = OpenPaletteLoadDialog(data->colours);
+					bool loaded = OpenPaletteLoadDialog(ui_data.colours);
 					if (loaded)
 					{
-						ApplyPaletteColour(data);
-						data->appliedPalette = true;
+						std::lock_guard<std::mutex> lock(pal_event_queue_mtx);
+						pal_event_queue.emplace(Pal_event_payload(ui_data.fname, ui_data.colours), Pal_event_type::Apply);
 					}
 				}
 				ImGui::PopStyleColor(3);
 
-				if (data->appliedPalette)
+				if (ui_data.appliedPalette)
 				{
 					//Reset button
 					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(buttonCol.x * 1.75f, buttonCol.y * 0.5f, buttonCol.z * 0.5f, buttonCol.w));
@@ -2385,7 +2393,10 @@ void MK12Menu::DrawPaletteEditorTab()
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeCol.x * 1.25f * 0.65f, activeCol.y * 0.5f * 0.65f, activeCol.z * 0.5f * 5.0f, activeCol.w));
 					if (ImGui::Button("Reset", ImVec2(width, 0)))
 					{
-						data->appliedPalette = false;
+						ui_data.appliedPalette = false;
+
+						std::lock_guard<std::mutex> lock{ pal_event_queue_mtx };
+						pal_event_queue.emplace(Pal_event_payload(ui_data.fname), Pal_event_type::Reset);
 					}
 
 					if (ImGui::IsItemHovered())

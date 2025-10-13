@@ -39,6 +39,7 @@ public:
 
 	static std::vector<GFrameContext> frameContextData;
 	static int						  numBuffers;
+	static DXGI_FORMAT				  format;
 
 	static void Init(GUIImplementationMode mode);
 	static void Shutdown();

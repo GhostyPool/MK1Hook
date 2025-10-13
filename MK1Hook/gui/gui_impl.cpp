@@ -27,6 +27,7 @@ ID3D12GraphicsCommandList* GUIImplementation::g_pd3dCommandList = nullptr;
 std::vector<GUIImplementation::GFrameContext> GUIImplementation::frameContextData;
 ID3D11DeviceContext* GUIImplementation::ms_cachedContext;
 int GUIImplementation::numBuffers;
+DXGI_FORMAT GUIImplementation::format;
 
 void GUIImplementation::Init(GUIImplementationMode mode)
 {
@@ -41,6 +42,7 @@ void GUIImplementation::Init(GUIImplementationMode mode)
 	ms_cachedContext = nullptr;
 	ms_mode = mode;
 	numBuffers = 0;
+	format = DXGI_FORMAT_UNKNOWN;
 	frameContextData.clear();
 }
 
@@ -79,6 +81,7 @@ bool GUIImplementation::ImGui_InitDX12(IDXGISwapChain* pSwapChain, HWND hWindow)
 		ZeroMemory(&desc, sizeof(DXGI_SWAP_CHAIN_DESC));
 		pSwapChain->GetDesc(&desc);
 		numBuffers = desc.BufferCount;
+		format = desc.BufferDesc.Format;
 		frameContextData.clear();
 		frameContextData.resize(numBuffers);
 	}
@@ -151,7 +154,7 @@ bool GUIImplementation::ImGui_InitDX12(IDXGISwapChain* pSwapChain, HWND hWindow)
 
 
 	if (!ImGui_ImplDX12_Init(pDevice, numBuffers,
-		DXGI_FORMAT_R8G8B8A8_UNORM, g_pd3dSrvDescHeap, g_pd3dSrvDescHeap->GetCPUDescriptorHandleForHeapStart(),
+		format, g_pd3dSrvDescHeap, g_pd3dSrvDescHeap->GetCPUDescriptorHandleForHeapStart(),
 		g_pd3dSrvDescHeap->GetGPUDescriptorHandleForHeapStart()))
 	{
 		eLog::Message(__FUNCTION__, "Failed to init DX12 Backend!");

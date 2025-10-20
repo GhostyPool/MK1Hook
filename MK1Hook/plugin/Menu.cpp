@@ -2395,7 +2395,7 @@ void MK12Menu::DrawPaletteEditorTab()
 					{
 						ui_data.appliedPalette = false;
 
-						std::lock_guard<std::mutex> lock{ pal_event_queue_mtx };
+						std::lock_guard<std::mutex> lock(pal_event_queue_mtx);
 						pal_event_queue.emplace(Pal_event_payload(ui_data.fname), Pal_event_type::Reset);
 					}
 

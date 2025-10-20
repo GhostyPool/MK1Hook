@@ -4,6 +4,7 @@
 #include "../plugin/Settings.h"
 #include <unordered_set>
 #include <array>
+#include <ranges>
 #include <shobjidl.h>
 #include <combaseapi.h>
 #include <Shlwapi.h>
@@ -308,7 +309,7 @@ void ApplyPaletteColour(PaletteData* data)
 
 void SetPaletteTexture_Hook(int64 ptr, FName ParameterName, UTexture2D* Value)
 {
-	FName palName = Value->GetFName();
+	const FName& palName = Value->GetFName();
 	auto i = g_palettes.find(palName);
 	if (i != g_palettes.end())
 	{
@@ -351,4 +352,50 @@ void SetPaletteTexture_Hook(int64 ptr, FName ParameterName, UTexture2D* Value)
 
 	if (orgSetTextureParameterValue)
 		orgSetTextureParameterValue(ptr, ParameterName, Value);
+}
+
+void CheckPalettes_Tick()
+{
+	std::vector<size_t> invalid_index;
+	{
+		std::shared_lock<std::shared_mutex> lock(TheMenu->m_pal_ui_mtx);
+		for (size_t i = 0; i < TheMenu->m_Palettes_UI.size(); i++)
+		{
+			if (!TheMenu->m_Palettes_UI[i].weakPtr->IsValid())
+				invalid_index.push_back(i);
+		}
+	}
+
+	if (!invalid_index.empty())
+	{
+		std::unique_lock<std::shared_mutex> lock(TheMenu->m_pal_ui_mtx);
+		for (size_t i : invalid_index | std::views::reverse)
+		{
+			PaletteData& palData = g_palettes.at(*TheMenu->m_Palettes_UI[i].fname);
+			palData.colours = TheMenu->m_Palettes_UI[i].colours;
+			palData.inMenu = false;
+			TheMenu->m_Palettes_UI.erase(TheMenu->m_Palettes_UI.begin() + i);
+		}
+	}
+
+	{
+		std::lock_guard<std::mutex> lock(pal_event_queue_mtx);
+		while (!pal_event_queue.empty())
+		{
+			Pal_event& event = pal_event_queue.front();
+			PaletteData& palData = g_palettes.at(*event.payload.fname);
+			switch (event.type)
+			{
+			case Pal_event_type::Apply:
+				palData.colours = event.payload.colours;
+				ApplyPaletteColour(&palData);
+				palData.appliedPalette = true;
+				break;
+			case Pal_event_type::Reset:
+				palData.appliedPalette = false;
+				break;
+			}
+			pal_event_queue.pop();
+		}
+	}
 }

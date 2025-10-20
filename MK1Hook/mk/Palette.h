@@ -88,9 +88,9 @@ struct Pal_event
 extern std::queue<Pal_event> pal_event_queue;
 extern std::mutex pal_event_queue_mtx;
 
-//Saving/loading
 bool OpenPaletteLoadDialog(std::array<ImVec4, 16>& colours);
 void OpenPaletteSaveDialog(const std::array<ImVec4, 16>& colours, const wchar_t* fileName);
 void ApplyPaletteColour(PaletteData* data);
 
+void CheckPalettes_Tick();
 void SetPaletteTexture_Hook(int64 ptr, FName ParameterName, UTexture2D* Value);

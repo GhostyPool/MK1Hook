@@ -579,7 +579,7 @@ void MK12Menu::OnToggleFreezeWorld()
 
 	if (FGGameInfo* GameInfo = GetGameInfo())
 	{
-		if (m_bFreezeWorld) GameInfo->SetGameSpeed(0.001f);
+		if (m_bFreezeWorld) GameInfo->SetGameSpeed(0.0f);
 		else GameInfo->SetGameSpeed(1.0f);
 	}
 }
@@ -1105,7 +1105,7 @@ void MK12Menu::DrawSpeedTab()
 	{
 		if (FGGameInfo* GameInfo = GetGameInfo())
 		{
-			if (m_bFreezeWorld) GameInfo->SetGameSpeed(0.001f);
+			if (m_bFreezeWorld) GameInfo->SetGameSpeed(0.0f);
 			else GameInfo->SetGameSpeed(1.0f);
 		}
 

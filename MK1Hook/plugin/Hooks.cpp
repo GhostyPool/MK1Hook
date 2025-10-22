@@ -56,7 +56,7 @@ void PluginDispatch()
 
 	if (TheMenu->m_bFreezeWorld)
 	{
-		GameInfo->SetGameSpeed(0.001f);
+		GameInfo->SetGameSpeed(0.0f);
 	}
 
 	if (p1)

@@ -46,6 +46,18 @@ extern "C" PLUGIN_API void OnFightStartup()
     // not implemented yet
 }
 
+// Called on GamelogicJump
+extern "C" PLUGIN_API void OnGameLogicJump(__int64 gameInfoPtr, char* mkoName, unsigned int functionHash)
+{
+
+}
+
+// Called on AActor::BeginPlay
+extern "C" PLUGIN_API void OnBeginPlay(__int64 actorPtr)
+{
+
+}
+
 // Tab data for menu, remove this if you don't want a plugin tab
 extern "C" PLUGIN_API void TabFunction()
 {

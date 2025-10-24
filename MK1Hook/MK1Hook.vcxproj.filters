@@ -1011,6 +1011,9 @@
     <ClInclude Include="mk\CVarHelper.h">
       <Filter>Header Files\mk</Filter>
     </ClInclude>
+    <ClInclude Include="unreal\AActor.h">
+      <Filter>Header Files\unreal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1183,6 +1186,9 @@
     </ClCompile>
     <ClCompile Include="mk\Palette.cpp">
       <Filter>Header Files\mk</Filter>
+    </ClCompile>
+    <ClCompile Include="unreal\AActor.cpp">
+      <Filter>Header Files\unreal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -22,6 +22,7 @@
 
 #include "unreal/FEngineLoop.h"
 #include "unreal/UObject.h"
+#include "unreal/AActor.h"
 #include "unreal/UWorld.h"
 
 #include <Commctrl.h>
@@ -78,6 +79,9 @@ void OnInitializeHook()
 	ReadCall(_pattern(PATID_TeamInfo_TagClass), pTeamInfo_GetTagClass);
 	ReadCall(_pattern(PATID_MKModifier_GlobalConstructor), pGlobalModifier_Constructor);
 	ReadCall(_pattern(PATID_MKModifier_TeamConstructor), pTeamModifier_Constructor);
+
+	MH_CreateHook((void*)_pattern(PATID_Actor_BeginPlay), &AActor_BeginPlay, (void**)&orgBeginPlay);
+	MH_EnableHook((void*)_pattern(PATID_Actor_BeginPlay));
 
 	MH_CreateHook((void*)_pattern(PATID_ContentDefinition_Load), &ContentDefinition_Load, (void**)&orgContentDefinition_Load);
 	MH_EnableHook((void*)_pattern(PATID_ContentDefinition_Load));

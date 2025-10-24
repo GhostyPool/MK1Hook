@@ -73,6 +73,7 @@ void SlowGameTimeForXTicks(float speed, int ticks)
 int64 GamelogicJump(int64 gameInfoPtr, char* mkoName, unsigned int functionHash, int a3, int a4, int a5, int a6, int a7, int a8)
 {
 	PluginOnJump(mkoName);
+	PluginInterface::OnGameLogicJump(gameInfoPtr, mkoName, functionHash);
 	return orgGamelogicJump(gameInfoPtr,mkoName, functionHash, a3, a4, a5, a6, a7, a8);
 }
 

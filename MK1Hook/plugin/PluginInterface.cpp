@@ -55,7 +55,8 @@ void PluginInterface::OnFrameTick()
 {
 	for (unsigned int i = 0; i < plugins.size(); i++)
 	{
-		plugins[i].pluginOnFrameTick();
+		if (plugins[i].pluginOnFrameTick)
+			plugins[i].pluginOnFrameTick();
 	}
 }
 
@@ -63,7 +64,26 @@ void PluginInterface::OnFightStartup()
 {
 	for (unsigned int i = 0; i < plugins.size(); i++)
 	{
-		plugins[i].pluginOnFightStartup();
+		if (plugins[i].pluginOnFightStartup)
+			plugins[i].pluginOnFightStartup();
+	}
+}
+
+void PluginInterface::OnGameLogicJump(__int64 gameInfoPtr, char* mkoName, unsigned int functionHash)
+{
+	for (unsigned int i = 0; i < plugins.size(); i++)
+	{
+		if (plugins[i].pluginOnGameLogicJump)
+			plugins[i].pluginOnGameLogicJump(gameInfoPtr, mkoName, functionHash);
+	}
+}
+
+void PluginInterface::OnBeginPlay(__int64 actorPtr)
+{
+	for (unsigned int i = 0; i < plugins.size(); i++)
+	{
+		if (plugins[i].pluginOnBeginPlay)
+			plugins[i].pluginOnBeginPlay(actorPtr);
 	}
 }
 
@@ -144,17 +164,9 @@ bool PluginInfo::Load(wchar_t* path)
 			return false;
 		}
 		pluginOnFrameTick = (void(*)())GetProcAddress(hModule, "OnFrameTick");
-		if (!pluginOnFrameTick)
-		{
-			eLog::Message(__FUNCTION__, "ERROR: Could not find OnFrameTick for %ws!", path);
-			return false;
-		}
 		pluginOnFightStartup = (void(*)())GetProcAddress(hModule, "OnFightStartup");
-		if (!pluginOnFightStartup)
-		{
-			eLog::Message(__FUNCTION__, "ERROR: Could not find OnFightStartup for %ws!", path);
-			return false;
-		}
+		pluginOnGameLogicJump = (void(*)(__int64, char*, unsigned int))GetProcAddress(hModule, "OnGameLogicJump");
+		pluginOnBeginPlay = (void(*)(__int64))GetProcAddress(hModule, "OnBeginPlay");
 		pluginOnInitialize = (void(*)())GetProcAddress(hModule, "OnInitialize");
 		if (!pluginOnInitialize)
 		{

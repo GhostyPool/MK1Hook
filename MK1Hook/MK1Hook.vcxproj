@@ -398,6 +398,7 @@
     <ClInclude Include="steam\UserStatsCommon.h" />
     <ClInclude Include="steam\UtilsCommon.h" />
     <ClInclude Include="steam\Win32Library.h" />
+    <ClInclude Include="unreal\AActor.h" />
     <ClInclude Include="unreal\FEngineLoop.h" />
     <ClInclude Include="unreal\FMath.h" />
     <ClInclude Include="unreal\FMatrix.h" />
@@ -471,6 +472,7 @@
     <ClCompile Include="plugin\PluginInterface.cpp" />
     <ClCompile Include="plugin\Settings.cpp" />
     <ClCompile Include="plugin\SteamAPI.cpp" />
+    <ClCompile Include="unreal\AActor.cpp" />
     <ClCompile Include="unreal\FEngineLoop.cpp" />
     <ClCompile Include="unreal\FMath.cpp" />
     <ClCompile Include="unreal\FMatrix.cpp" />

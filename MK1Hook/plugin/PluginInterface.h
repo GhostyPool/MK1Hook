@@ -19,6 +19,8 @@ public:
 	void (*pluginOnFrameTick)(void) = nullptr;
 	void (*pluginOnInitialize)() = nullptr;
 	void (*pluginOnFightStartup)(void) = nullptr;
+	void (*pluginOnGameLogicJump)(__int64, char*, unsigned int) = nullptr;
+	void (*pluginOnBeginPlay)(__int64) = nullptr;
 	void (*pluginOnShutdown)(void) = nullptr;
 	void (*pluginTabFunction)(void) = nullptr;
 
@@ -43,6 +45,8 @@ public:
 
 	static void OnFrameTick();
 	static void OnFightStartup();
+	static void OnGameLogicJump(__int64 gameInfoPtr, char* mkoName, unsigned int functionHash);
+	static void OnBeginPlay(__int64 actorPtr);
 
 	static void ProcessPluginTabs();
 

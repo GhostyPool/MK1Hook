@@ -5,6 +5,8 @@ enum EPatternID {
 	PATID_FEngineLoop_Tick,
 	PATID_FEngineLoop_Tick_Hook,
 
+	PATID_Actor_BeginPlay,
+
 	PATID_SetPaletteTexture,
 
 	PATID_SetupStartupAsset,

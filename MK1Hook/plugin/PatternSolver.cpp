@@ -29,6 +29,8 @@ void PatternSolver::Initialize()
     ms_patterns[PATID_FEngineLoop_Tick] = GetPattern("48 8B C4 48 89 58 10 48 89 70 18 48 89 78 20 55 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 C8", 0);
     ms_patterns[PATID_FEngineLoop_Tick_Hook] = GetPattern("48 8D 0D ? ? ? ? E8 ? ? ? ? 80 3D ? ? ? ? ? 74 EB 80", 7);
 
+    ms_patterns[PATID_Actor_BeginPlay] = GetPattern("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? ? ? ? 48 8B F1 F3 0F 10 89", 0);
+
     ms_patterns[PATID_SetPaletteTexture] = GetPattern("E8 ? ? ? ? 48 8B 4C 24 ? 48 8B 7C 24 ? 48 8B 74 24 ? 48 8B 6C 24 ? 48 8B 9C 24", 0);
 
     ms_patterns[PATID_SetupStartupAsset] = GetPattern("E8 ? ? ? ? 48 8D 93 ? ? ? ? 49 8D 8E ? ? ? ? E8 ? ? ? ? 0F B6 83 ? ? ? ? 41 88 86", 0);

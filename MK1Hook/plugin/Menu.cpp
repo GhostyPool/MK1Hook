@@ -2391,7 +2391,7 @@ void MK12Menu::DrawPaletteEditorTab()
 					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(buttonCol.x * 1.75f, buttonCol.y * 0.5f, buttonCol.z * 0.5f, buttonCol.w));
 					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(hoveredCol.x * 1.5f * 0.65f, hoveredCol.y * 0.5f * 0.65f, hoveredCol.z * 0.5f * 0.65f, hoveredCol.w));
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeCol.x * 1.25f * 0.65f, activeCol.y * 0.5f * 0.65f, activeCol.z * 0.5f * 5.0f, activeCol.w));
-					if (ImGui::Button("Reset", ImVec2(width, 0)))
+					if (ImGui::Button("Remove applied palette", ImVec2(width, 0)))
 					{
 						ui_data.appliedPalette = false;
 

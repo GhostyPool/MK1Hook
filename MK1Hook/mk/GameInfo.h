@@ -26,6 +26,12 @@ enum eCharacterClass {
 	TOTAL_CHARACTER_CLASSES = 3,
 };
 
+enum eOverrideType
+{
+	Override_Palette,
+	Override_Gear
+};
+
 
 class FGGameInfo {
 public:

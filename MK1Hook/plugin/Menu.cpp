@@ -1027,6 +1027,21 @@ void MK12Menu::DrawKameoTab()
 			ImGui::InputText("##p2kpal", szPlayer2KameoPal, sizeof(szPlayer2KameoPal));
 			ImGui::PopItemWidth();
 		}
+
+		if (ImGui::CollapsingHeader("Change Kameo Gear"))
+		{
+			ImGui::TextWrapped("Only works in tag mode!");
+			ImGui::TextWrapped("Use UModel/FModel to find the full path of the gear, eg. \"/Game/Disk/Char/SubZero/Gear/002/Blueprint/BP_SubZero_Gear002_A.BP_SubZero_Gear002_A_C\"");
+			ImGui::Checkbox("Change Player 1 Kameo Gear", &m_bPlayer1KameoGearModifier);
+			ImGui::PushItemWidth(-FLT_MIN);
+			ImGui::InputText("##p1kgear", szPlayer1KameoGear, sizeof(szPlayer1KameoGear));
+			ImGui::PopItemWidth();
+
+			ImGui::Checkbox("Change Player 2 Kameo Gear", &m_bPlayer2KameoGearModifier);
+			ImGui::PushItemWidth(-FLT_MIN);
+			ImGui::InputText("##p2kgear", szPlayer2KameoGear, sizeof(szPlayer2KameoGear));
+			ImGui::PopItemWidth();
+		}
 	}
 
 }
@@ -1458,7 +1473,7 @@ void MK12Menu::DrawSettings()
 		ImGui::TextWrapped("Game related settings");
 		if (ImGui::Checkbox("Force unlock items", &SettingsMgr->bForceUnlockItems))
 			SettingsMgr->bUseOfflineInventory = SettingsMgr->bForceUnlockItems;
-		ImGui::SameLine(); ShowHelpMarker("Allows you to use any item from the game. Requires a game restart!");
+		ImGui::SameLine(); ShowHelpMarker("Allows you to use any item from the game. You may experience problems changing your character in invasions/towers of time. Requires a game restart!");
 		if (SettingsMgr->bForceUnlockItems)
 			ImGui::BeginDisabled(true);
 		ImGui::Checkbox("Use offline inventory", &SettingsMgr->bUseOfflineInventory);

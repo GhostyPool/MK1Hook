@@ -1,6 +1,6 @@
 #include "UObject.h"
 
-FName UObject::GetFName() const { return Name; }
+const FName& UObject::GetFName() const { return Name; }
 
 FString UObject::GetName() const
 {

@@ -33,14 +33,14 @@ unsigned int _hash(const char* input);
 void GetCharacterPosition(FVector* vec, PLAYER_NUM plr);
 char* GetCharacterName(PLAYER_NUM plr);
 char* GetCharacterSkinName(PLAYER_NUM plr);
-char* GetCharacterOverrideName(PLAYER_NUM plr, bool isPal);
+char* GetCharacterOverrideName(PLAYER_NUM plr, eOverrideType type);
 
 void SetTeamMode(TEAM_NUM plr, TEAM_INFO_MODE mode);
 bool IsPartnerTeam(TEAM_NUM plr);
 
 void SetCharacterMKX(PLAYER_NUM plr, char* name, bool tag = false);
 void SetCharacterSkin(PLAYER_NUM plr, char* name);
-void SetCharacterOverride(PLAYER_NUM plr, char* name, bool isPal);
+void SetCharacterOverride(PLAYER_NUM plr, const char* name, eOverrideType type);
 void SetCharacterExtraMoveset(PLAYER_NUM plr, char* name);
 
 void SetCharacterAI(PLAYER_NUM plr, char* script, int level);

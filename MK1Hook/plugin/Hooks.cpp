@@ -173,14 +173,14 @@ void PluginFightStartup(int64 ptr)
 		SetCharacterSkin(PLAYER2, TheMenu->szPlayer2Skin);
 
 	if (TheMenu->m_bPlayer1PalModifier)
-		SetCharacterOverride(PLAYER1, TheMenu->szPlayer1Pal, true);
+		SetCharacterOverride(PLAYER1, TheMenu->szPlayer1Pal, Override_Palette);
 	if (TheMenu->m_bPlayer2PalModifier)
-		SetCharacterOverride(PLAYER2, TheMenu->szPlayer2Pal, true);
+		SetCharacterOverride(PLAYER2, TheMenu->szPlayer2Pal, Override_Palette);
 
 	if (TheMenu->m_bPlayer1GearModifier)
-		SetCharacterOverride(PLAYER1, TheMenu->szPlayer1Gear, false);
+		SetCharacterOverride(PLAYER1, TheMenu->szPlayer1Gear, Override_Gear);
 	if (TheMenu->m_bPlayer2GearModifier)
-		SetCharacterOverride(PLAYER2, TheMenu->szPlayer2Gear, false);
+		SetCharacterOverride(PLAYER2, TheMenu->szPlayer2Gear, Override_Gear);
 
 	if (TheMenu->m_bPlayer1MovesetModifier)
 		SetCharacterExtraMoveset(PLAYER1, TheMenu->szPlayer1Moveset);
@@ -198,9 +198,14 @@ void PluginFightStartup(int64 ptr)
 		SetCharacterSkin(PLAYER4, TheMenu->szPlayer2KameoSkin);
 
 	if (TheMenu->m_bPlayer1KameoPalModifier)
-		SetCharacterOverride(PLAYER3, TheMenu->szPlayer1KameoPal, true);
+		SetCharacterOverride(PLAYER3, TheMenu->szPlayer1KameoPal, Override_Palette);
 	if (TheMenu->m_bPlayer2KameoPalModifier)
-		SetCharacterOverride(PLAYER4, TheMenu->szPlayer2KameoPal, true);
+		SetCharacterOverride(PLAYER4, TheMenu->szPlayer2KameoPal, Override_Palette);
+
+	if (TheMenu->m_bPlayer1KameoGearModifier)
+		SetCharacterOverride(PLAYER3, TheMenu->szPlayer1KameoGear, Override_Gear);
+	if (TheMenu->m_bPlayer2KameoGearModifier)
+		SetCharacterOverride(PLAYER4, TheMenu->szPlayer2KameoGear, Override_Gear);
 
 	if (TheMenu->m_bAIDroneModifierP1)
 		SetCharacterAI(PLAYER1, TheMenu->szPlayer1AI, TheMenu->m_nAIDroneLevelP1);
@@ -209,26 +214,24 @@ void PluginFightStartup(int64 ptr)
 
 	eLog::Message("MK1Hook::Info()", "Team1");
 	eLog::Message("MK1Hook::Info()", "P1: %s Skin: %s", GetCharacterName(PLAYER1), GetCharacterSkinName(PLAYER1));
-	eLog::Message("MK1Hook::Info()", "P1: %s Palette: %s", GetCharacterName(PLAYER1), GetCharacterOverrideName(PLAYER1, true));
-	eLog::Message("MK1Hook::Info()", "P1: %s Gear: %s", GetCharacterName(PLAYER1), GetCharacterOverrideName(PLAYER1, false));
+	eLog::Message("MK1Hook::Info()", "P1: %s Palette: %s", GetCharacterName(PLAYER1), GetCharacterOverrideName(PLAYER1, Override_Palette));
+	eLog::Message("MK1Hook::Info()", "P1: %s Gear: %s", GetCharacterName(PLAYER1), GetCharacterOverrideName(PLAYER1, Override_Gear));
 	if (IsPartnerTeam(TEAM1))
 	{
 		eLog::Message("MK1Hook::Info()", "P3: %s Skin: %s", GetCharacterName(PLAYER3), GetCharacterSkinName(PLAYER3));
-		eLog::Message("MK1Hook::Info()", "P3: %s Palette: %s", GetCharacterName(PLAYER3), GetCharacterOverrideName(PLAYER3, true));
-		if (!strstr(GetCharacterName(PLAYER3), "KHAR_"))
-			eLog::Message("MK1Hook::Info()", "P3: %s Gear: %s", GetCharacterName(PLAYER3), GetCharacterOverrideName(PLAYER3, false));
+		eLog::Message("MK1Hook::Info()", "P3: %s Palette: %s", GetCharacterName(PLAYER3), GetCharacterOverrideName(PLAYER3, Override_Palette));
+		eLog::Message("MK1Hook::Info()", "P3: %s Gear: %s", GetCharacterName(PLAYER3), GetCharacterOverrideName(PLAYER3, Override_Gear));
 	}
 
 	eLog::Message("MK1Hook::Info()", "Team2");
 	eLog::Message("MK1Hook::Info()", "P2: %s Skin: %s", GetCharacterName(PLAYER2), GetCharacterSkinName(PLAYER2));
-	eLog::Message("MK1Hook::Info()", "P2: %s Palette: %s", GetCharacterName(PLAYER2), GetCharacterOverrideName(PLAYER2, true));
-	eLog::Message("MK1Hook::Info()", "P2: %s Gear: %s", GetCharacterName(PLAYER2), GetCharacterOverrideName(PLAYER2, false));
+	eLog::Message("MK1Hook::Info()", "P2: %s Palette: %s", GetCharacterName(PLAYER2), GetCharacterOverrideName(PLAYER2, Override_Palette));
+	eLog::Message("MK1Hook::Info()", "P2: %s Gear: %s", GetCharacterName(PLAYER2), GetCharacterOverrideName(PLAYER2, Override_Gear));
 	if (IsPartnerTeam(TEAM2))
 	{
 		eLog::Message("MK1Hook::Info()", "P4: %s Skin: %s", GetCharacterName(PLAYER4), GetCharacterSkinName(PLAYER4));
-		eLog::Message("MK1Hook::Info()", "P4: %s Palette: %s", GetCharacterName(PLAYER4), GetCharacterOverrideName(PLAYER4, true));
-		if (!strstr(GetCharacterName(PLAYER4), "KHAR_"))
-			eLog::Message("MK1Hook::Info()", "P4: %s Gear: %s", GetCharacterName(PLAYER4), GetCharacterOverrideName(PLAYER4, false));
+		eLog::Message("MK1Hook::Info()", "P4: %s Palette: %s", GetCharacterName(PLAYER4), GetCharacterOverrideName(PLAYER4, Override_Palette));
+		eLog::Message("MK1Hook::Info()", "P4: %s Gear: %s", GetCharacterName(PLAYER4), GetCharacterOverrideName(PLAYER4, Override_Gear));
 	}
 
 	PluginInterface::OnFightStartup();

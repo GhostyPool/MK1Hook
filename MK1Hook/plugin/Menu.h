@@ -154,6 +154,8 @@ public:
 	bool	m_bPlayer2KameoSkinModifier = false;
 	bool	m_bPlayer1KameoPalModifier = false;
 	bool	m_bPlayer2KameoPalModifier = false;
+	bool	m_bPlayer1KameoGearModifier = false;
+	bool	m_bPlayer2KameoGearModifier = false;
 
 	bool    m_bChangeGameMode = false;
 	bool	m_bOldTagSwap = false;
@@ -222,6 +224,8 @@ public:
 	char szPlayer2KameoSkin[1024] = {};
 	char szPlayer1KameoPal[1024] = {};
 	char szPlayer2KameoPal[1024] = {};
+	char szPlayer1KameoGear[1024] = {};
+	char szPlayer2KameoGear[1024] = {};
 	char szPlayer1TagCharacter[1024] = {};
 	char szPlayer2TagCharacter[1024] = {};
 	char szCurrentCameraOption[128] = {};

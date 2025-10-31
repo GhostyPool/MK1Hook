@@ -14,7 +14,7 @@ public:
 	FName		Name;
 	UObject*	Outer;
 
-	FName GetFName() const;
+	const FName& GetFName() const;
 	FString GetName() const;
 };
 

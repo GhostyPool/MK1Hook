@@ -1,10 +1,10 @@
 #include "FName.h"
 
-FString* FName::ToString(FString* str)
+FString* FName::ToString(FString* str) const
 {
 	static uintptr_t pat = _pattern(PATID_FName_ToString);
 	if (pat)
-		return 	((FString * (__thiscall*)(FName*, FString*))pat)(this, str);
+		return 	((FString * (__thiscall*)(const FName*, FString*))pat)(this, str);
 
 	return nullptr;
 }

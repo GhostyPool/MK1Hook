@@ -15,7 +15,7 @@ public:
 	int Index;
 	int Number;
 
-	FString* ToString(FString* str);
+	FString* ToString(FString* str) const;
 
 	FName();
 	FName(const char* Name, EFindName FindType, int formal);

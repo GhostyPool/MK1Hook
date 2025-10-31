@@ -20,11 +20,11 @@ VALIDATE_SIZE(CharacterContentDefinitionInfo, 576);
 
 struct Override
 {
-	char _pad[16] = { (char)0xFF, (char)0xFF, (char)0xFF, (char)0xFF };
+	int pad = -1;
+	char _pad[12] = {};
 	FName path;
 	char __pad[16] = {};
 };
-
 VALIDATE_SIZE(Override, 40);
 
 class CharacterDefinitionV2 {

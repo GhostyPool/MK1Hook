@@ -1,6 +1,6 @@
 #include "FEngineLoop.h"
 #include "..\plugin\Hooks.h"
-#include "..\mk\Palette.h"
+#include <utility>
 
 void FEngineLoop::Tick()
 {
@@ -9,9 +9,28 @@ void FEngineLoop::Tick()
 	{
 		((void(__fastcall*)(FEngineLoop*))pat)(this);
 
-		CheckPalettes_Tick();
+		ProcessTickQueue();
 
 		PluginDispatch();
 	}
 
+}
+
+void FEngineLoop::ProcessTickQueue()
+{
+	std::queue<std::function<void()>> local_queue;
+
+	{
+		std::lock_guard<std::mutex> lock(tick_queue_mutex);
+		if (!tick_queue.empty())
+		{
+			std::swap(local_queue, tick_queue);
+		}
+	}
+
+	while (!local_queue.empty())
+	{
+		(local_queue.front())();
+		local_queue.pop();
+	}
 }

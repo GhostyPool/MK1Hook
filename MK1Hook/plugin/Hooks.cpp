@@ -129,6 +129,7 @@ void PluginDispatch()
 
 	PluginInterface::OnFrameTick();
 	GUIImplementation::Gamepad_Reset();
+	PaletteUI::CheckPalettes();
 }
 
 void PluginFightStartup(int64 ptr)

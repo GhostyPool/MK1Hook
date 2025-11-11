@@ -10,6 +10,7 @@
 #include "../gui/gui_impl.h"
 
 #include "../unreal/UWorld.h"
+#include "../unreal/FEngineLoop.h"
 
 #include <random>
 #include <math.h>
@@ -2320,6 +2321,32 @@ void MK12Menu::DrawPaletteEditorTab()
 	{
 		for (PaletteUI& ui_data : m_Palettes_UI)
 		{
+			// --Colours--
+			static ImVec4 buttonCol = ImGui::GetStyleColorVec4(ImGuiCol_Button);
+			static ImVec4 hoveredCol = ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered);
+			static ImVec4 activeCol = ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive);
+
+			//Red
+			static ImVec4 buttonColRed{ buttonCol.x * 1.75f, buttonCol.y * 0.5f, buttonCol.z * 0.5f, buttonCol.w };
+			static ImVec4 hoveredColRed{ hoveredCol.x * 1.5f * 0.65f, hoveredCol.y * 0.5f * 0.65f, hoveredCol.z * 0.5f * 0.65f, hoveredCol.w };
+			static ImVec4 activeColRed{ activeCol.x * 1.25f * 0.65f, activeCol.y * 0.5f * 0.65f, activeCol.z * 0.5f * 5.0f, activeCol.w };
+
+			//Green
+			static ImVec4 buttonColGreen{ buttonCol.x, buttonCol.y * 1.75f, buttonCol.z, buttonCol.w };
+			static ImVec4 hoveredColGreen{ hoveredCol.x * 0.65f, hoveredCol.y * 1.75f * 0.65f, hoveredCol.z * 0.65f, hoveredCol.w };
+			static ImVec4 activeColGreen{ activeCol.x * 0.65f, activeCol.y * 1.75f * 0.65f, activeCol.z * 0.65f, activeCol.w };
+
+			//Blue
+			static ImVec4 buttonColBlue{ buttonCol.x * 0.5f, buttonCol.y, buttonCol.z * 1.75f, buttonCol.w };
+			static ImVec4 hoveredColBlue{ hoveredCol.x * 0.5f * 0.75f, hoveredCol.y * 0.75f, hoveredCol.z * 1.75f * 0.75f, hoveredCol.w };
+			static ImVec4 activeColBlue{ activeCol.x * 0.5f * 0.75f, activeCol.y * 0.75f, activeCol.z * 5.0f * 0.75f, activeCol.w };
+
+			//Yellow
+			static ImVec4 buttonColYellow{ buttonCol.x * 3.0f, buttonCol.y, buttonCol.z, buttonCol.w };
+			static ImVec4 hoveredColYellow{ hoveredCol.x * 1.75f * 0.5f, hoveredCol.y * 1.75f * 0.5f, hoveredCol.z * 0.5f, hoveredCol.w };
+			static ImVec4 activeColYellow{ activeCol.x * 1.75f * 0.5f, activeCol.y * 1.75f * 0.5f, activeCol.z * 0.5f, activeCol.w };
+
+
 			if (ImGui::CollapsingHeader(ui_data.name.c_str()))
 			{
 				ImGui::PushID(&ui_data);
@@ -2330,7 +2357,16 @@ void MK12Menu::DrawPaletteEditorTab()
 
 					char label[32] = {};
 					snprintf(label, sizeof(label), "Colour %d", i + 1);
-					ImGui::ColorEdit4(label, &ui_data.colours[i].x);
+					const bool colour_changed = ImGui::ColorEdit4(label, &ui_data.colours[i].x);
+
+					if (ImGui::IsItemDeactivatedAfterEdit() || (colour_changed && !ImGui::IsItemActive()))
+					{
+						std::lock_guard<std::mutex> lock(FEngineLoop::tick_queue_mutex);
+						FEngineLoop::tick_queue.emplace([ui_data, i]() {
+							PaletteData& palData = g_palettes.at(ui_data.fname);
+							palData.colours[i] = ui_data.colours[i];
+						});
+					}
 
 					if (i == 0)
 					{
@@ -2341,54 +2377,90 @@ void MK12Menu::DrawPaletteEditorTab()
 							{
 								ImVec4 random = { (static_cast<float>(rand()) / RAND_MAX), (static_cast<float>(rand()) / RAND_MAX), (static_cast<float>(rand()) / RAND_MAX), 1 };
 								ui_data.colours[c] = random;
+
+								{
+									std::lock_guard<std::mutex> lock(FEngineLoop::tick_queue_mutex);
+									FEngineLoop::tick_queue.emplace([ui_data]() {
+										PaletteData& palData = g_palettes.at(ui_data.fname);
+										palData.colours = ui_data.colours;
+									});
+								}
 							}
 						}
+						ImGui::SameLine();
+						ImGui::PushStyleColor(ImGuiCol_Button, buttonColRed);
+						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hoveredColRed);
+						ImGui::PushStyleColor(ImGuiCol_ButtonActive, activeColRed);
+						if (ImGui::Button("Reset colours"))
+						{
+							for (int c = 0; c < 16; c++)
+							{
+								ImVec4 white{ 1, 1, 1, 1 };
+								ui_data.colours[c] = white;
+
+								{
+									std::lock_guard<std::mutex> lock(FEngineLoop::tick_queue_mutex);
+									FEngineLoop::tick_queue.emplace([ui_data]() {
+										PaletteData& palData = g_palettes.at(ui_data.fname);
+										palData.colours = ui_data.colours;
+									});
+								}
+							}
+						}
+						ImGui::PopStyleColor(3);
 					}
 
 					ImGui::PopID();
 				}
 
-				ImVec4 buttonCol = ImGui::GetStyleColorVec4(ImGuiCol_Button);
-				ImVec4 hoveredCol = ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered);
-				ImVec4 activeCol = ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive);
-
 				//Apply button
 				bool pressedApplyKey = ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) || ImGui::IsKeyPressed(ImGuiKey_Space);
 				const float width = ImGui::CalcItemWidth();
-				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(buttonCol.x, buttonCol.y * 1.75f, buttonCol.z, buttonCol.w));
-				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(hoveredCol.x * 0.65f, hoveredCol.y * 1.75f * 0.65f, hoveredCol.z * 0.65f, hoveredCol.w));
-				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeCol.x * 0.65f, activeCol.y * 1.75f * 0.65f, activeCol.z * 0.65f, activeCol.w));
+				ImGui::PushStyleColor(ImGuiCol_Button, buttonColGreen);
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hoveredColGreen);
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, activeColGreen);
 				if (ImGui::Button("Apply", ImVec2(width, 0)) || (pressedApplyKey && !ImGui::GetIO().WantTextInput))
 				{
 					ui_data.appliedPalette = true;
-					std::lock_guard<std::mutex> lock(pal_event_queue_mtx);
-					pal_event_queue.emplace(Pal_event_payload(ui_data.fname, ui_data.colours), Pal_event_type::Apply);
+
+					std::lock_guard<std::mutex> lock(FEngineLoop::tick_queue_mutex);
+					FEngineLoop::tick_queue.emplace([ui_data]() {
+						PaletteData& palData = g_palettes.at(ui_data.fname);
+						palData.colours = ui_data.colours;
+						palData.ApplyPaletteColour();
+						palData.appliedPalette = true;
+					});
 				}
 				ImGui::PopStyleColor(3);
 
 				const float halfWidth = (width - ImGui::GetStyle().ItemSpacing.x) * 0.5f;
 				//Save button
-				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(buttonCol.x * 0.5f, buttonCol.y, buttonCol.z * 1.75f, buttonCol.w));
-				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(hoveredCol.x * 0.5f * 0.75f, hoveredCol.y * 0.75f, hoveredCol.z * 1.75f * 0.75f, hoveredCol.w));
-				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeCol.x * 0.5f * 0.75f, activeCol.y * 0.75f, activeCol.z * 5.0f * 0.75f, activeCol.w));
+				ImGui::PushStyleColor(ImGuiCol_Button, buttonColBlue);
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hoveredColBlue);
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, activeColBlue);
 				if (ImGui::Button("Save preset", ImVec2(halfWidth, 0)))
 				{
-					OpenPaletteSaveDialog(ui_data.colours, std::wstring(ui_data.name.begin(), ui_data.name.end()).c_str());
+					ui_data.OpenPaletteSaveDialog();
 				}
 				ImGui::PopStyleColor(3);
 
 				//Load button
-				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(buttonCol.x * 3.0f, buttonCol.y, buttonCol.z, buttonCol.w));
-				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(hoveredCol.x * 1.75f * 0.5f, hoveredCol.y * 1.75f * 0.5f, hoveredCol.z * 0.5f, hoveredCol.w));
-				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeCol.x * 1.75f * 0.5f, activeCol.y * 1.75f * 0.5f, activeCol.z * 0.5f, activeCol.w));
+				ImGui::PushStyleColor(ImGuiCol_Button, buttonColYellow);
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hoveredColYellow);
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, activeColYellow);
 				ImGui::SameLine();
 				if (ImGui::Button("Load preset", ImVec2(halfWidth, 0)))
 				{
-					bool loaded = OpenPaletteLoadDialog(ui_data.colours);
+					bool loaded = ui_data.OpenPaletteLoadDialog();
 					if (loaded)
 					{
-						std::lock_guard<std::mutex> lock(pal_event_queue_mtx);
-						pal_event_queue.emplace(Pal_event_payload(ui_data.fname, ui_data.colours), Pal_event_type::Apply);
+						std::lock_guard<std::mutex> lock(FEngineLoop::tick_queue_mutex);
+						FEngineLoop::tick_queue.emplace([ui_data]() {
+							PaletteData& palData = g_palettes.at(ui_data.fname);
+							palData.colours = ui_data.colours;
+							palData.ApplyPaletteColour();
+							palData.appliedPalette = true;
+						});
 					}
 				}
 				ImGui::PopStyleColor(3);
@@ -2396,15 +2468,18 @@ void MK12Menu::DrawPaletteEditorTab()
 				if (ui_data.appliedPalette)
 				{
 					//Reset button
-					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(buttonCol.x * 1.75f, buttonCol.y * 0.5f, buttonCol.z * 0.5f, buttonCol.w));
-					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(hoveredCol.x * 1.5f * 0.65f, hoveredCol.y * 0.5f * 0.65f, hoveredCol.z * 0.5f * 0.65f, hoveredCol.w));
-					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeCol.x * 1.25f * 0.65f, activeCol.y * 0.5f * 0.65f, activeCol.z * 0.5f * 5.0f, activeCol.w));
+					ImGui::PushStyleColor(ImGuiCol_Button, buttonColRed);
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hoveredColRed);
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, activeColRed);
 					if (ImGui::Button("Remove applied palette", ImVec2(width, 0)))
 					{
 						ui_data.appliedPalette = false;
 
-						std::lock_guard<std::mutex> lock(pal_event_queue_mtx);
-						pal_event_queue.emplace(Pal_event_payload(ui_data.fname), Pal_event_type::Reset);
+						std::lock_guard<std::mutex> lock(FEngineLoop::tick_queue_mutex);
+						FEngineLoop::tick_queue.emplace([ui_data]() {
+							PaletteData& palData = g_palettes.at(ui_data.fname);
+							palData.appliedPalette = false;
+						});
 					}
 
 					if (ImGui::IsItemHovered())

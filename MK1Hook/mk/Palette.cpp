@@ -17,8 +17,6 @@
 void(__fastcall* orgSetTextureParameterValue)(int64, FName, UTexture2D*) = nullptr;
 
 std::unordered_map<FName, PaletteData, FNameHash> g_palettes;
-std::queue<Pal_event> pal_event_queue;
-std::mutex pal_event_queue_mtx;
 
 static const char presetHeader[8] = "Palette";
 static bool WritePresetToDisk(const std::array<ImVec4, 16>& colours, const wchar_t* path)
@@ -73,7 +71,6 @@ static bool ReadPresetFromDisk(std::array<ImVec4, 16>& colours, const wchar_t* p
 	std::fclose(f);
 	return true;
 }
-
 static void ShowMessageBox(bool success, bool saving)
 {
 	if (success)
@@ -94,8 +91,7 @@ static void PrintErrorMessage(HRESULT hr, bool saving)
 	const char* func = saving ? "OpenPaletteSaveDialog" : "OpenPaletteLoadDialog";
 	eLog::Message(func, "Error: 0x%08X", (unsigned)hr);
 }
-
-bool OpenPaletteLoadDialog(std::array<ImVec4, 16>& colours)
+bool PaletteUI::OpenPaletteLoadDialog()
 {
 	bool loaded = false;
 	bool needUninit = false;
@@ -149,7 +145,7 @@ leave:
 	if (hr != HRESULT_FROM_WIN32(ERROR_CANCELLED)) ShowMessageBox(loaded, false);
 	return loaded;
 }
-void OpenPaletteSaveDialog(const std::array<ImVec4, 16>& colours, const wchar_t* fileName)
+void PaletteUI::OpenPaletteSaveDialog() const
 {
 	bool saved = false;
 	bool needUninit = false;
@@ -179,7 +175,7 @@ void OpenPaletteSaveDialog(const std::array<ImVec4, 16>& colours, const wchar_t*
 	dialog->SetFileTypes(ARRAYSIZE(filters), filters);
 	dialog->SetFileTypeIndex(1);
 	dialog->SetDefaultExtension(L"palette");
-	dialog->SetFileName(fileName);
+	dialog->SetFileName(std::wstring(name.begin(), name.end()).c_str());
 	dialog->SetTitle(L"Save palette preset");
 
 	hr = dialog->Show(nullptr);
@@ -203,6 +199,30 @@ release_dialog:
 leave:
 	if (needUninit) CoUninitialize();
 	if (hr != HRESULT_FROM_WIN32(ERROR_CANCELLED)) ShowMessageBox(saved, true);
+}
+void PaletteUI::CheckPalettes()
+{
+	std::vector<size_t> invalid_palettes;
+	{
+		std::shared_lock<std::shared_mutex> lock(TheMenu->m_pal_ui_mtx);
+		for (size_t i = 0; i < TheMenu->m_Palettes_UI.size(); ++i)
+		{
+			PaletteData& palData = g_palettes.at(TheMenu->m_Palettes_UI[i].fname);
+			if (!palData.weakPtr.IsValid())
+				invalid_palettes.push_back(i);
+		}
+	}
+
+	if (!invalid_palettes.empty())
+	{
+		std::unique_lock<std::shared_mutex> lock(TheMenu->m_pal_ui_mtx);
+		for (size_t i : invalid_palettes | std::views::reverse)
+		{
+			PaletteData& palData = g_palettes.at(TheMenu->m_Palettes_UI[i].fname);
+			palData.inMenu = false;
+			TheMenu->m_Palettes_UI.erase(TheMenu->m_Palettes_UI.begin() + i);
+		}
+	}
 }
 
 static wchar_t palettesFolder[MAX_PATH] = {};
@@ -248,13 +268,12 @@ static void CheckAndLoadFromDisk(PaletteData& data)
 	if (loaded)
 	{
 		eLog::Message("MK1Hook::Info()", "Loaded palette: %s from disk.", data.name.c_str());
-		ApplyPaletteColour(&data);
+		data.ApplyPaletteColour();
 		data.appliedPalette = true;
 	}
 	else
 		eLog::Message(__FUNCTION__, "Could not load palette : %s from disk, its format is invalid!", data.name.c_str());
 }
-
 static std::array<uint8_t, 4> RGBAToBGRA(ImVec4 colour)
 {
 	uint8_t R = colour.x * 255.f;
@@ -264,16 +283,16 @@ static std::array<uint8_t, 4> RGBAToBGRA(ImVec4 colour)
 
 	return { B, G, R, A };
 }
-void ApplyPaletteColour(PaletteData* data)
+void PaletteData::ApplyPaletteColour()
 {
-	if (data->weakPtr.IsValid())
+	if (weakPtr.IsValid())
 	{
 		std::array<uint8_t, 2048> bytes{};
 
 		//16 colour segments
 		for (int i = 0; i < 16; i++)
 		{
-			std::array<uint8_t, 4> pixel = RGBAToBGRA(data->colours[i]);
+			std::array<uint8_t, 4> pixel = RGBAToBGRA(colours[i]);
 			uint8_t* segment = bytes.data() + i * (32 * 4);
 
 			//32 pixels each
@@ -282,7 +301,7 @@ void ApplyPaletteColour(PaletteData* data)
 			}
 		}
 
-		UTexture2D* texture = static_cast<UTexture2D*>(data->weakPtr.Get());
+		UTexture2D* texture = static_cast<UTexture2D*>(weakPtr.Get());
 		FBulkDataBase& bulkdata = texture->PlatformData->Mips.Get(0)->BulkData;
 
 		if (bulkdata.isSingleUse())
@@ -304,8 +323,9 @@ void ApplyPaletteColour(PaletteData* data)
 		texture->UpdateResource();
 	}
 	else
-		eLog::Message(__FUNCTION__, "Cannot apply new palette colour to invalid palette: %s!", data->name.c_str());
+		eLog::Message(__FUNCTION__, "Cannot apply new palette colour to invalid palette: %s!", name.c_str());
 }
+
 
 void SetPaletteTexture_Hook(int64 ptr, FName ParameterName, UTexture2D* Value)
 {
@@ -320,7 +340,7 @@ void SetPaletteTexture_Hook(int64 ptr, FName ParameterName, UTexture2D* Value)
 			existingPal.weakPtr = Value;
 
 			if (existingPal.appliedPalette)
-				ApplyPaletteColour(&existingPal);
+				existingPal.ApplyPaletteColour();
 
 			if (!existingPal.inMenu)
 			{
@@ -352,50 +372,4 @@ void SetPaletteTexture_Hook(int64 ptr, FName ParameterName, UTexture2D* Value)
 
 	if (orgSetTextureParameterValue)
 		orgSetTextureParameterValue(ptr, ParameterName, Value);
-}
-
-void CheckPalettes_Tick()
-{
-	std::vector<size_t> invalid_index;
-	{
-		std::shared_lock<std::shared_mutex> lock(TheMenu->m_pal_ui_mtx);
-		for (size_t i = 0; i < TheMenu->m_Palettes_UI.size(); i++)
-		{
-			if (!TheMenu->m_Palettes_UI[i].weakPtr->IsValid())
-				invalid_index.push_back(i);
-		}
-	}
-
-	if (!invalid_index.empty())
-	{
-		std::unique_lock<std::shared_mutex> lock(TheMenu->m_pal_ui_mtx);
-		for (size_t i : invalid_index | std::views::reverse)
-		{
-			PaletteData& palData = g_palettes.at(*TheMenu->m_Palettes_UI[i].fname);
-			palData.colours = TheMenu->m_Palettes_UI[i].colours;
-			palData.inMenu = false;
-			TheMenu->m_Palettes_UI.erase(TheMenu->m_Palettes_UI.begin() + i);
-		}
-	}
-
-	{
-		std::lock_guard<std::mutex> lock(pal_event_queue_mtx);
-		while (!pal_event_queue.empty())
-		{
-			Pal_event& event = pal_event_queue.front();
-			PaletteData& palData = g_palettes.at(*event.payload.fname);
-			switch (event.type)
-			{
-			case Pal_event_type::Apply:
-				palData.colours = event.payload.colours;
-				ApplyPaletteColour(&palData);
-				palData.appliedPalette = true;
-				break;
-			case Pal_event_type::Reset:
-				palData.appliedPalette = false;
-				break;
-			}
-			pal_event_queue.pop();
-		}
-	}
 }

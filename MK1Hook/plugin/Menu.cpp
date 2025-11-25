@@ -1,5 +1,6 @@
 #include "Menu.h"
 #include "Settings.h"
+#include "EgsAPI.h"
 #include "../helper/eKeyboardMan.h"
 #include "../helper/eGamepadManager.h"
 #include "../helper/eMouse.h"
@@ -449,68 +450,85 @@ void MK12Menu::SetupCharacterLists()
 		m_KameoList.push_back(szKameos[i]);
 	}
 
-	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2576800))
+	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2576800)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("983a48cc30704b72bd5672c63f833004") || EgsAPI::IsItemOwned("b0948456eb5f457d9c660c75832c8564"))))
 	{
 		m_CharacterList.push_back("CHAR_ShangTsung");
 		m_CharacterList.push_back("CHAR_Boss_ShangTsung_Tower");
 		m_CharacterList.push_back("BOSS_Grunt_ShangTsung_A");
 	}
 
-	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2636080))
+	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2636080)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("983a48cc30704b72bd5672c63f833004") || EgsAPI::IsItemOwned("c5e71125a9c14f56b6e40b674717f72f"))))
 		m_CharacterList.push_back("CHAR_OmniMan");
 
-	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2636090))
+
+	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2636090)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("983a48cc30704b72bd5672c63f833004") || EgsAPI::IsItemOwned("a78b139fd6d546ae94abc11398768d7b"))))
 		m_KameoList.push_back("KHAR_TremorKAM");
 
-	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2695680))
+	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2695680)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("983a48cc30704b72bd5672c63f833004") || EgsAPI::IsItemOwned("721fd20fe9c24d799c2b2b3f9fa0e626"))))
 	{
 		m_CharacterList.push_back("CHAR_QuanChi");
 		m_CharacterList.push_back("BOSS_Titan_QuanChi");
 	}
 
-	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2695690))
+	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2695690)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("983a48cc30704b72bd5672c63f833004") || EgsAPI::IsItemOwned("3913e447017c4582afa247fc0a1e5b6d"))))
 		m_KameoList.push_back("KHAR_KhameleonKAM");
 
-	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2777460))
+	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2777460)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("983a48cc30704b72bd5672c63f833004") || EgsAPI::IsItemOwned("535194755ce3437f9dc848f55406f7ce"))))
 		m_CharacterList.push_back("CHAR_Peacemaker");
 
-	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2777480))
+	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2777480)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("983a48cc30704b72bd5672c63f833004") || EgsAPI::IsItemOwned("ad1f61074db44890bc3265a9c7859c3a"))))
 		m_KameoList.push_back("KHAR_JanetCageKAM");
 
-	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2880670))
+	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2880670)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("983a48cc30704b72bd5672c63f833004") || EgsAPI::IsItemOwned("1c257910730c4df8aa9bc51082c41978"))))
 		m_CharacterList.push_back("CHAR_Ermac");
 
-	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2968440))
+	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2968440)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("983a48cc30704b72bd5672c63f833004") || EgsAPI::IsItemOwned("c43c98f6c32d4948b20cfbe31b93a788"))))
 		m_CharacterList.push_back("CHAR_Homelander");
 
-	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2880680))
+	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2880680)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("983a48cc30704b72bd5672c63f833004") || EgsAPI::IsItemOwned("febf5faafb164d5d87140f0ad3d8f458"))))
 		m_KameoList.push_back("KHAR_MavadoKAM");
 
-	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2968450))
+	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(2968450)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("983a48cc30704b72bd5672c63f833004") || EgsAPI::IsItemOwned("89d7a322d1bb4e3fbd6f10c506e0e59b"))))
 		m_KameoList.push_back("KHAR_FerraKAM");
 
-	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(3049390))
+	if (SteamAPI::IsAppInstalled(2576780) || SteamAPI::IsAppInstalled(3049390)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("983a48cc30704b72bd5672c63f833004") || EgsAPI::IsItemOwned("8a002e7a6ca74ecc9a0835305207ba78"))))
 	{
 		m_CharacterList.push_back("CHAR_Takeda");
 		m_CharacterList.push_back("BOSS_Grunt_Takeda_A");
 	}
 
-	if (SteamAPI::IsAppInstalled(3233540) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990) || SteamAPI::IsAppInstalled(3168140))
+	if (SteamAPI::IsAppInstalled(3233540) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990) || SteamAPI::IsAppInstalled(3168140)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("5fdaa8674fb846cebecce1567e9a4dbb") || EgsAPI::IsItemOwned("e44ff76a565349cea54e2811669f2da0"))))
 	{
 		m_CharacterList.push_back("CHAR_Cyrax");
 	}
 
-	if (SteamAPI::IsAppInstalled(3233540) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990) || SteamAPI::IsAppInstalled(3168150))
+	if (SteamAPI::IsAppInstalled(3233540) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990) || SteamAPI::IsAppInstalled(3168150)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("5fdaa8674fb846cebecce1567e9a4dbb") || EgsAPI::IsItemOwned("3a56692519ce460391ca290cd7a0060c"))))
 	{
 		m_CharacterList.push_back("CHAR_Sektor");
 	}
 
-	if (SteamAPI::IsAppInstalled(3233540) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990) || SteamAPI::IsAppInstalled(3168160))
+	if (SteamAPI::IsAppInstalled(3233540) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990) || SteamAPI::IsAppInstalled(3168160)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("5fdaa8674fb846cebecce1567e9a4dbb") || EgsAPI::IsItemOwned("bdb30fd4e307414dacc92ee6c70497e5"))))
 	{
 		m_CharacterList.push_back("CHAR_NoobSaibot");
 	}
 
-	if (SteamAPI::IsAppInstalled(3233540) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990))
+	if (SteamAPI::IsAppInstalled(3233540) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("5fdaa8674fb846cebecce1567e9a4dbb"))))
 	{
 		m_CharacterList.push_back("CHAR_Havik_TitanNPC");
 
@@ -520,22 +538,26 @@ void MK12Menu::SetupCharacterLists()
 		m_KameoList.push_back("KHAR_TakedaKAM_NPC");
 	}
 
-	if (SteamAPI::IsAppInstalled(3233540) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990) || SteamAPI::IsAppInstalled(3286290))
+	if (SteamAPI::IsAppInstalled(3233540) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990) || SteamAPI::IsAppInstalled(3286290)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("5fdaa8674fb846cebecce1567e9a4dbb") || EgsAPI::IsItemOwned("e9eec22e8be345a28c1bddfc63c18dc5"))))
 	{
 		m_CharacterList.push_back("CHAR_Ghostface");
 	}
 
-	if (SteamAPI::IsAppInstalled(3286310) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990) || SteamAPI::IsAppInstalled(3286290))
+	if (SteamAPI::IsAppInstalled(3286310) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990) || SteamAPI::IsAppInstalled(3286290)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("5fdaa8674fb846cebecce1567e9a4dbb") || EgsAPI::IsItemOwned("6be3fa19847a4d169f122a83071472da"))))
 	{
 		m_CharacterList.push_back("CHAR_Conan");
 	}
 
-	if (SteamAPI::IsAppInstalled(3286300) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990) || SteamAPI::IsAppInstalled(3286290))
+	if (SteamAPI::IsAppInstalled(3286300) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990) || SteamAPI::IsAppInstalled(3286290)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("5fdaa8674fb846cebecce1567e9a4dbb") || EgsAPI::IsItemOwned("71dd666c8a75409ebf9c1252157219a7"))))
 	{
 		m_CharacterList.push_back("CHAR_T1000");
 	}
 
-	if (SteamAPI::IsAppInstalled(3490300) || SteamAPI::IsAppInstalled(3233540) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990))
+	if (SteamAPI::IsAppInstalled(3490300) || SteamAPI::IsAppInstalled(3233540) || SteamAPI::IsAppInstalled(3161240) || SteamAPI::IsAppInstalled(3134000) || SteamAPI::IsAppInstalled(3133990)
+		|| (EgsAPI::IsOwnershipQueried() && (EgsAPI::IsItemOwned("5fdaa8674fb846cebecce1567e9a4dbb") || EgsAPI::IsItemOwned("c3c79cd9f23144b88c5bd632ed83cbc0"))))
 	{
 		m_KameoList.push_back("KHAR_MadamBoKAM");
 	}
@@ -554,6 +576,12 @@ void MK12Menu::Initialize()
 
 void MK12Menu::OnActivate()
 {
+	if (EgsAPI::IsOwnershipQueried() && !m_bEpicHandled)
+	{
+		SetupCharacterLists();
+		m_bEpicHandled = true;
+	}
+
 	m_bIsActive ^= 1;
 }
 

@@ -40,6 +40,9 @@
     <Filter Include="Header Files\steam">
       <UniqueIdentifier>{d7357768-ccf5-4652-9a88-7b858757ad0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\epic">
+      <UniqueIdentifier>{d9eae282-a659-42dc-8fcb-84502e536e4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1008,6 +1011,219 @@
     <ClInclude Include="mk\Palette.h">
       <Filter>Header Files\mk</Filter>
     </ClInclude>
+    <ClInclude Include="epic\eos_achievements.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_achievements_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_anticheatclient.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_anticheatclient_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_anticheatcommon_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_anticheatserver.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_anticheatserver_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_auth.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_auth_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_base.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_common.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_connect.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_connect_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_custominvites.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_custominvites_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_ecom.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_ecom_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_friends.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_friends_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_init.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_integratedplatform.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_integratedplatform_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_kws.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_kws_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_leaderboards.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_leaderboards_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_lobby.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_lobby_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_logging.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_metrics.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_metrics_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_mods.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_mods_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_p2p.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_p2p_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_platform_prereqs.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_playerdatastorage.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_playerdatastorage_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_presence.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_presence_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_progressionsnapshot.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_progressionsnapshot_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_reports.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_reports_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_result.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_rtc.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_rtc_admin.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_rtc_admin_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_rtc_audio.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_rtc_audio_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_rtc_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_sanctions.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_sanctions_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_sdk.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_sessions.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_sessions_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_stats.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_stats_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_titlestorage.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_titlestorage_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_ui.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_ui_keys.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_ui_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_userinfo.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_userinfo_types.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_version.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_Windows.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="epic\eos_Windows_base.h">
+      <Filter>Header Files\epic</Filter>
+    </ClInclude>
+    <ClInclude Include="plugin\EgsAPI.h">
+      <Filter>Header Files\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="plugin\EgsInternal.h">
+      <Filter>Header Files\plugin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1181,10 +1397,25 @@
     <ClCompile Include="mk\Palette.cpp">
       <Filter>Header Files\mk</Filter>
     </ClCompile>
+    <ClCompile Include="plugin\EgsAPI.cpp">
+      <Filter>Header Files\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="plugin\EgsInternal.cpp">
+      <Filter>Header Files\plugin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="epic\eos_achievements_types_deprecated.inl">
+      <Filter>Header Files\epic</Filter>
+    </None>
+    <None Include="epic\eos_anticheatclient_types_deprecated.inl">
+      <Filter>Header Files\epic</Filter>
+    </None>
+    <None Include="epic\eos_leaderboards_types_deprecated.inl">
+      <Filter>Header Files\epic</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

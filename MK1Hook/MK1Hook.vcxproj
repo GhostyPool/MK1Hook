@@ -97,6 +97,75 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="epic\eos_achievements.h" />
+    <ClInclude Include="epic\eos_achievements_types.h" />
+    <ClInclude Include="epic\eos_anticheatclient.h" />
+    <ClInclude Include="epic\eos_anticheatclient_types.h" />
+    <ClInclude Include="epic\eos_anticheatcommon_types.h" />
+    <ClInclude Include="epic\eos_anticheatserver.h" />
+    <ClInclude Include="epic\eos_anticheatserver_types.h" />
+    <ClInclude Include="epic\eos_auth.h" />
+    <ClInclude Include="epic\eos_auth_types.h" />
+    <ClInclude Include="epic\eos_base.h" />
+    <ClInclude Include="epic\eos_common.h" />
+    <ClInclude Include="epic\eos_connect.h" />
+    <ClInclude Include="epic\eos_connect_types.h" />
+    <ClInclude Include="epic\eos_custominvites.h" />
+    <ClInclude Include="epic\eos_custominvites_types.h" />
+    <ClInclude Include="epic\eos_ecom.h" />
+    <ClInclude Include="epic\eos_ecom_types.h" />
+    <ClInclude Include="epic\eos_friends.h" />
+    <ClInclude Include="epic\eos_friends_types.h" />
+    <ClInclude Include="epic\eos_init.h" />
+    <ClInclude Include="epic\eos_integratedplatform.h" />
+    <ClInclude Include="epic\eos_integratedplatform_types.h" />
+    <ClInclude Include="epic\eos_kws.h" />
+    <ClInclude Include="epic\eos_kws_types.h" />
+    <ClInclude Include="epic\eos_leaderboards.h" />
+    <ClInclude Include="epic\eos_leaderboards_types.h" />
+    <ClInclude Include="epic\eos_lobby.h" />
+    <ClInclude Include="epic\eos_lobby_types.h" />
+    <ClInclude Include="epic\eos_logging.h" />
+    <ClInclude Include="epic\eos_metrics.h" />
+    <ClInclude Include="epic\eos_metrics_types.h" />
+    <ClInclude Include="epic\eos_mods.h" />
+    <ClInclude Include="epic\eos_mods_types.h" />
+    <ClInclude Include="epic\eos_p2p.h" />
+    <ClInclude Include="epic\eos_p2p_types.h" />
+    <ClInclude Include="epic\eos_platform_prereqs.h" />
+    <ClInclude Include="epic\eos_playerdatastorage.h" />
+    <ClInclude Include="epic\eos_playerdatastorage_types.h" />
+    <ClInclude Include="epic\eos_presence.h" />
+    <ClInclude Include="epic\eos_presence_types.h" />
+    <ClInclude Include="epic\eos_progressionsnapshot.h" />
+    <ClInclude Include="epic\eos_progressionsnapshot_types.h" />
+    <ClInclude Include="epic\eos_reports.h" />
+    <ClInclude Include="epic\eos_reports_types.h" />
+    <ClInclude Include="epic\eos_result.h" />
+    <ClInclude Include="epic\eos_rtc.h" />
+    <ClInclude Include="epic\eos_rtc_admin.h" />
+    <ClInclude Include="epic\eos_rtc_admin_types.h" />
+    <ClInclude Include="epic\eos_rtc_audio.h" />
+    <ClInclude Include="epic\eos_rtc_audio_types.h" />
+    <ClInclude Include="epic\eos_rtc_types.h" />
+    <ClInclude Include="epic\eos_sanctions.h" />
+    <ClInclude Include="epic\eos_sanctions_types.h" />
+    <ClInclude Include="epic\eos_sdk.h" />
+    <ClInclude Include="epic\eos_sessions.h" />
+    <ClInclude Include="epic\eos_sessions_types.h" />
+    <ClInclude Include="epic\eos_stats.h" />
+    <ClInclude Include="epic\eos_stats_types.h" />
+    <ClInclude Include="epic\eos_titlestorage.h" />
+    <ClInclude Include="epic\eos_titlestorage_types.h" />
+    <ClInclude Include="epic\eos_types.h" />
+    <ClInclude Include="epic\eos_ui.h" />
+    <ClInclude Include="epic\eos_ui_keys.h" />
+    <ClInclude Include="epic\eos_ui_types.h" />
+    <ClInclude Include="epic\eos_userinfo.h" />
+    <ClInclude Include="epic\eos_userinfo_types.h" />
+    <ClInclude Include="epic\eos_version.h" />
+    <ClInclude Include="epic\eos_Windows.h" />
+    <ClInclude Include="epic\eos_Windows_base.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="gui\const.h" />
     <ClInclude Include="gui\dx12hook.h" />
@@ -141,6 +210,8 @@
     <ClInclude Include="mk\VMProc.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="plugin\API.h" />
+    <ClInclude Include="plugin\EgsAPI.h" />
+    <ClInclude Include="plugin\EgsInternal.h" />
     <ClInclude Include="plugin\Hooks.h" />
     <ClInclude Include="plugin\Menu.h" />
     <ClInclude Include="plugin\PatternSolver.h" />
@@ -463,6 +534,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="plugin\API.cpp" />
+    <ClCompile Include="plugin\EgsAPI.cpp" />
+    <ClCompile Include="plugin\EgsInternal.cpp" />
     <ClCompile Include="plugin\Hooks.cpp" />
     <ClCompile Include="plugin\Menu.cpp" />
     <ClCompile Include="plugin\ModifierList.cpp" />
@@ -484,6 +557,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
+    <None Include="epic\eos_achievements_types_deprecated.inl" />
+    <None Include="epic\eos_anticheatclient_types_deprecated.inl" />
+    <None Include="epic\eos_leaderboards_types_deprecated.inl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MK1Hook.rc" />

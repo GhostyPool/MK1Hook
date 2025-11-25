@@ -11,6 +11,7 @@
 #include "plugin/Hooks.h"
 #include "plugin/PatternSolver.h"
 #include "plugin/PluginInterface.h"
+#include "plugin/EgsInternal.h"
 
 #include "utils/MemoryMgr.h"
 #include "utils/Trampoline.h"
@@ -50,6 +51,15 @@ void OnInitializeHook()
 
 	if (SettingsMgr->bEnableGamepadSupport)
 		eGamepadManager::Initialize();
+
+	uintptr_t egs_pat = PatternSolver::GetPattern("48 89 5C 24 ? 55 57 41 54 41 55 41 56 48 8B EC 48 83 EC ? 45 33 ED", 0);
+	if (egs_pat != 0)
+	{
+		MH_CreateHook((void*)egs_pat, &EGS_Setup_Hook, (void**)&ogEGS_Setup);
+		MH_EnableHook((void*)egs_pat);
+	}
+	else
+		eLog::Message(__FUNCTION__, "WARNING: Failed to find EGS pattern! This is normal if you are using the Steam version.");
 
 	Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
 	InjectHook(_pattern(PATID_FEngineLoop_Tick_Hook), tramp->Jump(&FEngineLoop::Tick));

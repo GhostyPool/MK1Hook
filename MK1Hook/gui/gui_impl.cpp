@@ -7,6 +7,8 @@
 #include "font.h"
 #include "../plugin/Menu.h"
 #include "../plugin/Settings.h"
+#include "../plugin/EgsAPI.h"
+#include "../plugin/EgsInternal.h"
 #include "notifications.h"
 #include "../helper/eKeyboardMan.h"
 #include "dx12hook.h"
@@ -311,7 +313,9 @@ void GUIImplementation::OnPresent_GUIStart(IDXGISwapChain* pSwapChain)
 	}
 	ms_bShouldRefreshRenderTarget = true;
 
-	SteamAPI_Initialize();
+	if (!EgsInternal::bEgsInternalOk)
+		SteamAPI_Initialize();
+		
 	TheMenu->Initialize();
 }
 

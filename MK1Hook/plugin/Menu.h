@@ -112,6 +112,7 @@ public:
 	bool	 m_bMouseControl = false;
 	bool	 m_bDisableDOF = false;
 	bool	 m_bStageModifierMainMenu = false;
+	bool	 m_bEpicHandled = false;
 
 	// cheats
 	bool	m_bInfiniteHealthP1 = false;
@@ -253,7 +254,7 @@ public:
 	std::vector<ScriptDataFunction> m_SpecialMoveList;
 	std::vector<ScriptDataFunction> m_DataFunctionsList;
 
-	//Palettes
+	// palettes
 	std::vector<PaletteUI> m_Palettes_UI;
 	std::shared_mutex m_pal_ui_mtx;
 

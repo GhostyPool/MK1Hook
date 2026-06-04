@@ -90,6 +90,7 @@ static const char* szKitbashCH15[] = {
 	"CH15_SindelCH15",
 	"CH15_SmokeCH15",
 	"CH15_SubZeroCH15",
+	"CH15_ShangTsungCH15",
 	"CH15_TanyaCH15",
 };
 
@@ -178,6 +179,14 @@ static const char* szCharactersBoss[] = {
 	"BOSS_Grunt_Smoke_A",
 	"BOSS_Grunt_SubZero_A",
 	"BOSS_Grunt_Tanya_A",
+	"BOSS_FinalBoss_LiuKang",
+	"BOSS_FinalBoss_Raiden",
+	"BOSS_FinalBoss_ShangTsung",
+	"BOSS_FinalBoss_Reptile",
+	"BOSS_FinalBoss_Mileena",
+	"BOSS_FinalBoss_Nitara",
+	"BOSS_FinalBoss_SubZero",
+	"BOSS_FinalBoss_Scorpion"
 };
 
 

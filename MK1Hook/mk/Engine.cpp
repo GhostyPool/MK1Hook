@@ -312,6 +312,18 @@ void SetCharacterOverride(PLAYER_NUM plr, const char* name, eOverrideType type)
 	overrides->Get(index).path.Index = palName.Index;
 }
 
+void SetCharacterStoryOverride(PLAYER_NUM plr)
+{
+	CharacterDefinitionV2* chr = GetCharacterDefinition(plr);
+
+	const char* charName = GetCharacterName(plr);
+	if (!chr || strcmp(charName, "CHAR_None") == 0 || strstr(charName, "KHAR_")) return;
+
+	MainCharacter* mainChr = reinterpret_cast<MainCharacter*>(chr);
+
+	mainChr->executeStoryOverride = true;
+}
+
 void SetCharacterExtraMoveset(PLAYER_NUM plr, char* name)
 {
 	MainCharacter* chr = reinterpret_cast<MainCharacter*>(GetCharacterDefinition(plr));

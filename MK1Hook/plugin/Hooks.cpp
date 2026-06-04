@@ -164,6 +164,16 @@ void PluginFightStartup(int64 ptr)
 	if (TheMenu->m_bPlayer2GearModifier)
 		SetCharacterOverride(PLAYER2, TheMenu->szPlayer2Gear, Override_Gear);
 
+	if (TheMenu->m_bPlayer1StoryModifier)
+		SetCharacterStoryOverride(PLAYER1);
+	if (TheMenu->m_bPlayer2StoryModifier)
+		SetCharacterStoryOverride(PLAYER2);
+
+	if (TheMenu->m_bPlayer1TagStoryModifier)
+		SetCharacterStoryOverride(PLAYER3);
+	if (TheMenu->m_bPlayer2TagStoryModifier)
+		SetCharacterStoryOverride(PLAYER4);
+
 	if (TheMenu->m_bPlayer1MovesetModifier)
 		SetCharacterExtraMoveset(PLAYER1, TheMenu->szPlayer1Moveset);
 	if (TheMenu->m_bPlayer2MovesetModifier)

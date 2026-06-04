@@ -50,10 +50,13 @@ class MainCharacter : public CharacterDefinitionV2 {
 public:
 	FName extraMoveset;
 	TArray<Override> overrides;
+	char pad[0x12D];
+	bool executeStoryOverride;
 };
 
 VALIDATE_OFFSET(MainCharacter, extraMoveset, 0x100);
 VALIDATE_OFFSET(MainCharacter, overrides, 0x0108);
+VALIDATE_OFFSET(MainCharacter, executeStoryOverride, 0x0245);
 
 class KameoCharacter : public CharacterDefinitionV2 {
 public:

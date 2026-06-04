@@ -842,6 +842,8 @@ void MK12Menu::UpdateFreecam()
 void MK12Menu::DrawCharacterTab()
 {
 	ImGui::Checkbox("Change Player 1 Character", &m_bPlayer1Modifier);
+	ImGui::SameLine(); ImGui::Checkbox("Enable Story Override##plr1storyoverride", &m_bPlayer1StoryModifier);
+	ImGui::SameLine(); ShowHelpMarker("Enables the story exclusive moveset override, if any exists.");
 	{
 		ImGui::PushItemWidth(-FLT_MIN);
 		if (ImGui::BeginCombo("##p1chr", szPlayer1ModifierCharacter))
@@ -861,6 +863,8 @@ void MK12Menu::DrawCharacterTab()
 	}
 
 	ImGui::Checkbox("Change Player 2 Character", &m_bPlayer2Modifier);
+	ImGui::SameLine(); ImGui::Checkbox("Enable Story Override##plr2storyoverride", &m_bPlayer2StoryModifier);
+	ImGui::SameLine(); ShowHelpMarker("Enables the story exclusive moveset override, if any exists.");
 	{
 		ImGui::PushItemWidth(-FLT_MIN);
 		if (ImGui::BeginCombo("##p2chr", szPlayer2ModifierCharacter))
@@ -877,7 +881,7 @@ void MK12Menu::DrawCharacterTab()
 			ImGui::EndCombo();
 		}
 		ImGui::PopItemWidth();
-	}	
+	}
 
 	if (ImGui::CollapsingHeader("Change Skin"))
 	{
@@ -891,34 +895,32 @@ void MK12Menu::DrawCharacterTab()
 		ImGui::PushItemWidth(-FLT_MIN);
 		ImGui::InputText("##p2skin", szPlayer2Skin, sizeof(szPlayer2Skin));
 		ImGui::PopItemWidth();
+	}
+	if (ImGui::CollapsingHeader("Change Palette"))
+	{
+		ImGui::TextWrapped("Use UModel/FModel to find the full path of the palette, eg. \"/Game/Disk/Char/SubZero/Skin/001/Palette/SetA/Blueprints/BP_SubZero_Skin001_Pal002.BP_SubZero_Skin001_Pal002_C\"");
+		ImGui::Checkbox("Change Player 1 Palette", &m_bPlayer1PalModifier);
+		ImGui::PushItemWidth(-FLT_MIN);
+		ImGui::InputText("##p1pal", szPlayer1Pal, sizeof(szPlayer1Pal));
+		ImGui::PopItemWidth();
 
-		if (ImGui::CollapsingHeader("Change Palette"))
-		{
-			ImGui::TextWrapped("Use UModel/FModel to find the full path of the palette, eg. \"/Game/Disk/Char/SubZero/Skin/001/Palette/SetA/Blueprints/BP_SubZero_Skin001_Pal002.BP_SubZero_Skin001_Pal002_C\"");
-			ImGui::Checkbox("Change Player 1 Palette", &m_bPlayer1PalModifier);
-			ImGui::PushItemWidth(-FLT_MIN);
-			ImGui::InputText("##p1pal", szPlayer1Pal, sizeof(szPlayer1Pal));
-			ImGui::PopItemWidth();
+		ImGui::Checkbox("Change Player 2 Palette", &m_bPlayer2PalModifier);
+		ImGui::PushItemWidth(-FLT_MIN);
+		ImGui::InputText("##p2pal", szPlayer2Pal, sizeof(szPlayer2Pal));
+		ImGui::PopItemWidth();
+	}
+	if (ImGui::CollapsingHeader("Change Gear"))
+	{
+		ImGui::TextWrapped("Use UModel/FModel to find the full path of the gear, eg. \"/Game/Disk/Char/SubZero/Gear/002/Blueprint/BP_SubZero_Gear002_A.BP_SubZero_Gear002_A_C\"");
+		ImGui::Checkbox("Change Player 1 Gear", &m_bPlayer1GearModifier);
+		ImGui::PushItemWidth(-FLT_MIN);
+		ImGui::InputText("##p1gear", szPlayer1Gear, sizeof(szPlayer1Gear));
+		ImGui::PopItemWidth();
 
-			ImGui::Checkbox("Change Player 2 Palette", &m_bPlayer2PalModifier);
-			ImGui::PushItemWidth(-FLT_MIN);
-			ImGui::InputText("##p2pal", szPlayer2Pal, sizeof(szPlayer2Pal));
-			ImGui::PopItemWidth();
-		}
-
-		if (ImGui::CollapsingHeader("Change Gear"))
-		{
-			ImGui::TextWrapped("Use UModel/FModel to find the full path of the gear, eg. \"/Game/Disk/Char/SubZero/Gear/002/Blueprint/BP_SubZero_Gear002_A.BP_SubZero_Gear002_A_C\"");
-			ImGui::Checkbox("Change Player 1 Gear", &m_bPlayer1GearModifier);
-			ImGui::PushItemWidth(-FLT_MIN);
-			ImGui::InputText("##p1gear", szPlayer1Gear, sizeof(szPlayer1Gear));
-			ImGui::PopItemWidth();
-
-			ImGui::Checkbox("Change Player 2 Gear", &m_bPlayer2GearModifier);
-			ImGui::PushItemWidth(-FLT_MIN);
-			ImGui::InputText("##p2gear", szPlayer2Gear, sizeof(szPlayer2Gear));
-			ImGui::PopItemWidth();
-		}
+		ImGui::Checkbox("Change Player 2 Gear", &m_bPlayer2GearModifier);
+		ImGui::PushItemWidth(-FLT_MIN);
+		ImGui::InputText("##p2gear", szPlayer2Gear, sizeof(szPlayer2Gear));
+		ImGui::PopItemWidth();
 	}
 	if (ImGui::CollapsingHeader("Change Addon Moveset"))
 	{
@@ -1023,7 +1025,6 @@ void MK12Menu::DrawKameoTab()
 	}
 	ImGui::PopItemWidth();
 
-
 	if (ImGui::CollapsingHeader("Change Kameo Skin"))
 	{
 		ImGui::TextWrapped("Look up the log/console window for possible skin names, most however use a simple pattern, eg. \"BP_Scorpion_Skin001_A_Char\". Skins apply only to characters they're designed for.");
@@ -1036,37 +1037,38 @@ void MK12Menu::DrawKameoTab()
 		ImGui::PushItemWidth(-FLT_MIN);
 		ImGui::InputText("##p2kskin", szPlayer2KameoSkin, sizeof(szPlayer2KameoSkin));
 		ImGui::PopItemWidth();
-
-		if (ImGui::CollapsingHeader("Change Kameo Palette"))
-		{
-			ImGui::TextWrapped("Use UModel/FModel to find the full path of the palette, eg. \"/Game/Disk/Char/SubZero/Skin/001/Palette/SetA/Blueprints/BP_SubZero_Skin001_Pal002.BP_SubZero_Skin001_Pal002_C\"");
-			ImGui::Checkbox("Change Player 1 Kameo Palette", &m_bPlayer1KameoPalModifier);
-			ImGui::PushItemWidth(-FLT_MIN);
-			ImGui::InputText("##p1kpal", szPlayer1KameoPal, sizeof(szPlayer1KameoPal));
-			ImGui::PopItemWidth();
-
-			ImGui::Checkbox("Change Player 2 Kameo Palette", &m_bPlayer2KameoPalModifier);
-			ImGui::PushItemWidth(-FLT_MIN);
-			ImGui::InputText("##p2kpal", szPlayer2KameoPal, sizeof(szPlayer2KameoPal));
-			ImGui::PopItemWidth();
-		}
-
-		if (ImGui::CollapsingHeader("Change Kameo Gear"))
-		{
-			ImGui::TextWrapped("Only works in tag mode!");
-			ImGui::TextWrapped("Use UModel/FModel to find the full path of the gear, eg. \"/Game/Disk/Char/SubZero/Gear/002/Blueprint/BP_SubZero_Gear002_A.BP_SubZero_Gear002_A_C\"");
-			ImGui::Checkbox("Change Player 1 Kameo Gear", &m_bPlayer1KameoGearModifier);
-			ImGui::PushItemWidth(-FLT_MIN);
-			ImGui::InputText("##p1kgear", szPlayer1KameoGear, sizeof(szPlayer1KameoGear));
-			ImGui::PopItemWidth();
-
-			ImGui::Checkbox("Change Player 2 Kameo Gear", &m_bPlayer2KameoGearModifier);
-			ImGui::PushItemWidth(-FLT_MIN);
-			ImGui::InputText("##p2kgear", szPlayer2KameoGear, sizeof(szPlayer2KameoGear));
-			ImGui::PopItemWidth();
-		}
 	}
+	if (ImGui::CollapsingHeader("Change Kameo Palette"))
+	{
+		ImGui::TextWrapped("Use UModel/FModel to find the full path of the palette, eg. \"/Game/Disk/Char/SubZero/Skin/001/Palette/SetA/Blueprints/BP_SubZero_Skin001_Pal002.BP_SubZero_Skin001_Pal002_C\"");
+		ImGui::Checkbox("Change Player 1 Kameo Palette", &m_bPlayer1KameoPalModifier);
+		ImGui::PushItemWidth(-FLT_MIN);
+		ImGui::InputText("##p1kpal", szPlayer1KameoPal, sizeof(szPlayer1KameoPal));
+		ImGui::PopItemWidth();
 
+		ImGui::Checkbox("Change Player 2 Kameo Palette", &m_bPlayer2KameoPalModifier);
+		ImGui::PushItemWidth(-FLT_MIN);
+		ImGui::InputText("##p2kpal", szPlayer2KameoPal, sizeof(szPlayer2KameoPal));
+		ImGui::PopItemWidth();
+	}
+	if (ImGui::CollapsingHeader("Change Kameo Gear"))
+	{
+		if (TheMenu->m_nCurrentTeamMode != MODE_TAG || !m_bChangeGameMode)
+			ImGui::BeginDisabled();
+		ImGui::TextWrapped("Only works in tag mode!");
+		ImGui::TextWrapped("Use UModel/FModel to find the full path of the gear, eg. \"/Game/Disk/Char/SubZero/Gear/002/Blueprint/BP_SubZero_Gear002_A.BP_SubZero_Gear002_A_C\"");
+		ImGui::Checkbox("Change Player 1 Kameo Gear", &m_bPlayer1KameoGearModifier);
+		ImGui::PushItemWidth(-FLT_MIN);
+		ImGui::InputText("##p1kgear", szPlayer1KameoGear, sizeof(szPlayer1KameoGear));
+		ImGui::PopItemWidth();
+
+		ImGui::Checkbox("Change Player 2 Kameo Gear", &m_bPlayer2KameoGearModifier);
+		ImGui::PushItemWidth(-FLT_MIN);
+		ImGui::InputText("##p2kgear", szPlayer2KameoGear, sizeof(szPlayer2KameoGear));
+		ImGui::PopItemWidth();
+		if (TheMenu->m_nCurrentTeamMode != MODE_TAG || !m_bChangeGameMode)
+			ImGui::EndDisabled();
+	}
 }
 
 void MK12Menu::DrawPlayerTab()
@@ -2293,7 +2295,10 @@ void MK12Menu::DrawModifiersTab()
 				ImGui::TextWrapped("As of 24 October 2023 update, it is no longer possible to tag in with kameo button. First character needs to be defeated for next to pop in.");
 				ImGui::Checkbox("Set Tag On Select Screen", &m_bOldTagSwap);
 				ImGui::SameLine(); ShowHelpMarker("Replaces kameo selection with tag character on select screen. Allows to keep gear and customization. Only existing characters will work.");
+				ImGui::AlignTextToFramePadding();
 				ImGui::Text("Player 1 Tag Character");
+				ImGui::SameLine(); ImGui::Checkbox("Enable Story Override##plr1tagstoryoverride", &m_bPlayer1TagStoryModifier);
+				ImGui::SameLine(); ShowHelpMarker("Enables the story exclusive moveset override, if any exists.");
 				ImGui::PushItemWidth(-FLT_MIN);
 				if (ImGui::BeginCombo("##p1tag", szPlayer1TagCharacter))
 				{
@@ -2310,7 +2315,10 @@ void MK12Menu::DrawModifiersTab()
 				}
 				ImGui::PopItemWidth();
 
+				ImGui::AlignTextToFramePadding();
 				ImGui::Text("Player 2 Tag Character");
+				ImGui::SameLine(); ImGui::Checkbox("Enable Story Override##plr2tagstoryoverride", &m_bPlayer2TagStoryModifier);
+				ImGui::SameLine(); ShowHelpMarker("Enables the story exclusive moveset override, if any exists.");
 				ImGui::PushItemWidth(-FLT_MIN);
 				if (ImGui::BeginCombo("##p2tag", szPlayer2TagCharacter))
 				{

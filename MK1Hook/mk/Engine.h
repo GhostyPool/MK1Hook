@@ -41,6 +41,7 @@ bool IsPartnerTeam(TEAM_NUM plr);
 void SetCharacterMKX(PLAYER_NUM plr, char* name, bool tag = false);
 void SetCharacterSkin(PLAYER_NUM plr, char* name);
 void SetCharacterOverride(PLAYER_NUM plr, const char* name, eOverrideType type);
+void SetCharacterStoryOverride(PLAYER_NUM plr);
 void SetCharacterExtraMoveset(PLAYER_NUM plr, char* name);
 
 void SetCharacterAI(PLAYER_NUM plr, char* script, int level);

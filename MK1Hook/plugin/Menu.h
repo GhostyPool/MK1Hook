@@ -145,6 +145,8 @@ public:
 	bool	m_bPlayer2PalModifier = false;
 	bool	m_bPlayer1GearModifier = false;
 	bool	m_bPlayer2GearModifier = false;
+	bool	m_bPlayer1StoryModifier = false;
+	bool	m_bPlayer2StoryModifier = false;
 	bool	m_bPlayer1MovesetModifier = false;
 	bool	m_bPlayer2MovesetModifier = false;
 
@@ -159,6 +161,8 @@ public:
 
 	bool    m_bChangeGameMode = false;
 	bool	m_bOldTagSwap = false;
+	bool	m_bPlayer1TagStoryModifier = false;
+	bool	m_bPlayer2TagStoryModifier = false;
 	bool    m_bDefinitionSwap = false;
 	bool    m_bDefinitionSwapLog = false;
 	bool    m_bDefinitionExtraSwap = false;

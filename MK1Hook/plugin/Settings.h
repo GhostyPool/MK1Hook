@@ -17,10 +17,6 @@ public:
 
 	bool bEnableGamepadSupport;
 
-	//Palette specific
-	bool bLoadPalettesAtStartup;
-	char szPalettesFolder[255];
-
 	// generic
 	int iHookMenuOpenKey;
 	int iToggleCustomCamKey;

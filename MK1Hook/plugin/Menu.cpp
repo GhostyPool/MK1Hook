@@ -350,6 +350,7 @@ const char* szMovesets[] = {
 	"Smoke",
 	"SubZero",
 	"NinjaMime",
+	"Barka",
 };
 
 const char* szAI[] = {
@@ -1507,22 +1508,6 @@ void MK12Menu::DrawSettings()
 		ImGui::PushItemWidth(-FLT_MIN);
 		ImGui::InputFloat("##", &SettingsMgr->fMenuScale);
 		ImGui::PopItemWidth();
-		ImGui::Separator();
-		if (ImGui::Checkbox("Use Invasions CH15 Characters", &SettingsMgr->bUseInvasionsCH15Characters))
-		{
-			SetupCharacterLists();
-		}
-		ImGui::SameLine();
-		ShowHelpMarker("Replaces CH15 characters in the character list with variants from Invasions, they are more complete with cinematics. This option does not require a restart.");
-		ImGui::TextWrapped("Palette editor settings");
-		ImGui::Checkbox("Load palettes at startup", &SettingsMgr->bLoadPalettesAtStartup);
-		ImGui::SameLine(); ShowHelpMarker("Loads any palette presets (.palette) at startup from the folder defined below. Palette file names must match the palette texture names. (e.g. \"T_SubZero_Skin001_Pal001.palette\")");
-		if (!SettingsMgr->bLoadPalettesAtStartup)
-			ImGui::BeginDisabled(true);
-		ImGui::TextWrapped("Palettes folder");
-		ImGui::SameLine(); ImGui::InputText("##palfolder", SettingsMgr->szPalettesFolder, sizeof(SettingsMgr->szPalettesFolder));
-		if (!SettingsMgr->bLoadPalettesAtStartup)
-			ImGui::EndDisabled();
 		break;
 	case INI:            
 		ImGui::TextWrapped("These settings control MK1Hook.ini options. Any changes require game restart to take effect.");

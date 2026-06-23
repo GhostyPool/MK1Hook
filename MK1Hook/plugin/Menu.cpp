@@ -186,7 +186,14 @@ static const char* szCharactersBoss[] = {
 	"BOSS_FinalBoss_Mileena",
 	"BOSS_FinalBoss_Nitara",
 	"BOSS_FinalBoss_SubZero",
-	"BOSS_FinalBoss_Scorpion"
+	"BOSS_FinalBoss_Scorpion",
+	"BOSS_Titan_Ashrah",
+	"BOSS_Titan_Baraka",
+	"BOSS_Titan_Havik",
+	"BOSS_Titan_KungLao",
+	"BOSS_Titan_LiMei",
+	"BOSS_Titan_RainMage",
+	"BOSS_Titan_ShaoKahn",
 };
 
 
